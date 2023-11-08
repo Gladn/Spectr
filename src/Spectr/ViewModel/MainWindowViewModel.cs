@@ -1,12 +1,7 @@
 ﻿using Spectr.Commands;
 using Spectr.Model;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -55,15 +50,22 @@ namespace Spectr.ViewModel
 
         #region Комманда закрытия приложения
         public ICommand CloseAppCommand { get; }
-
         private bool CanCloseAppCommandExecute(object p) => true;
-
         private void OnCloseAppCommandExecuted(object p)
         {
             Application.Current.Shutdown();
         }
         #endregion
-        
+
+        #region Комманда перемещения приложения
+        public ICommand DragWindowCommand { get; }
+        private bool CanDragWindowCommandExecute(object p) => true;
+        private void OnDragWindowCommandExecuted(object p)
+        {
+            if (p is Window window) window.DragMove();
+        }
+        #endregion
+
         #endregion
         public MainWindowViewModel()
         {
@@ -71,10 +73,16 @@ namespace Spectr.ViewModel
 
             CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
 
+            DragWindowCommand = new LambdaCommand(OnDragWindowCommandExecuted, CanDragWindowCommandExecute);
+
+
             #endregion
 
             _customerViewModel = new CustomerViewModel();
             Task.Run(async () => await InitializeDataAsync());
+        
+        
+        
         }
 
         private async Task InitializeDataAsync()

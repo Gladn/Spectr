@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-A:\ProjectC\Spectr\Spectr\obj\Debug\
+A:\ProjectC\Spectr\src\Spectr\obj\Debug\
 Spectr
 none
 false
 DEBUG;TRACE
-A:\ProjectC\Spectr\Spectr\App.xaml
+A:\ProjectC\Spectr\src\Spectr\App.xaml
 1871162140
 
 18-437702463
-191953002449
+191647373539
 View\MainWindow.xaml;
 
 False

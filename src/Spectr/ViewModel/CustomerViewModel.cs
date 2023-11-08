@@ -53,20 +53,22 @@ namespace Spectr.ViewModel
                         Customer customer = new Customer
                         {
                             CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
+                            DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
                             CustomerFirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
                             CustomerSecontName = reader.GetString(reader.GetOrdinal("CustomerSecontName")),
-                            DocNumber = reader.GetString(reader.GetOrdinal("DocNumber"))
+                            CustomerPatronymic = reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
+                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                            EmailAdress = reader.GetString(reader.GetOrdinal("EmailAdress"))
                         };
                         customers.Add(customer);
                     }
                 }
             }
-
             return customers;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

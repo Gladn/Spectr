@@ -7,9 +7,12 @@ namespace Spectr.Model
     public class Customer : INotifyPropertyChanged
     {
         private int _customerID;
+        private string _docNumber;
         private string _customerFirstName;
         private string _customerSecontName;
-        private string _docNumber;
+        private string _customerPatronymic;
+        private string _phoneNumber;
+        private string _emailAdress;
 
         public int CustomerID
         {
@@ -21,7 +24,16 @@ namespace Spectr.Model
                 OnPropertyChanged();
             }
         }
-
+        public string DocNumber
+        {
+            get => _docNumber;
+            set
+            {
+                if (value == _docNumber) return;
+                _docNumber = value;
+                OnPropertyChanged();
+            }
+        }
         public string CustomerFirstName
         {
             get => _customerFirstName;
@@ -43,21 +55,38 @@ namespace Spectr.Model
                 OnPropertyChanged();
             }
         }
-
-        public string DocNumber
+        public string CustomerPatronymic
         {
-            get => _docNumber;
+            get => _customerPatronymic;
             set
             {
-                if (value == _docNumber) return;
-                _docNumber = value;
+                if (value == _customerPatronymic) return;
+                _customerPatronymic = value;
+                OnPropertyChanged();
+            }
+        }
+        public string PhoneNumber
+        {
+            get => _phoneNumber;
+            set
+            {
+                if (value == _phoneNumber) return;
+                _phoneNumber = value;
+                OnPropertyChanged();
+            }
+        }
+        public string EmailAdress
+        {
+            get => _emailAdress;
+            set
+            {
+                if (value == _emailAdress) return;
+                _emailAdress = value;
                 OnPropertyChanged();
             }
         }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
