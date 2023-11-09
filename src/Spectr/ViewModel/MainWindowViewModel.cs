@@ -10,15 +10,6 @@ namespace Spectr.ViewModel
 {
     internal class MainWindowViewModel : ViewModelBase
     {
-        private readonly CustomerViewModel _customerViewModel;
-
-        private ObservableCollection<Customer> _customers;
-        public ObservableCollection<Customer> Customers
-        {
-            get { return _customers; }
-            set { Set(ref _customers, value); }
-        }
-
 
         #region Визуалка
         #region Заголовок
@@ -46,7 +37,7 @@ namespace Spectr.ViewModel
         #endregion
 
 
-        #region Комманды
+        #region Общие комманды приложения
 
         #region Комманда закрытия приложения
         public ICommand CloseAppCommand { get; }
@@ -65,8 +56,10 @@ namespace Spectr.ViewModel
             if (p is Window window) window.DragMove();
         }
         #endregion
+      
 
         #endregion
+       
         public MainWindowViewModel()
         {
             #region Команды
@@ -74,21 +67,9 @@ namespace Spectr.ViewModel
             CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
 
             DragWindowCommand = new LambdaCommand(OnDragWindowCommandExecuted, CanDragWindowCommandExecute);
-
-
-            #endregion
-
-            _customerViewModel = new CustomerViewModel();
-            Task.Run(async () => await InitializeDataAsync());
+           
+            #endregion           
         
-        
-        
-        }
-
-        private async Task InitializeDataAsync()
-        {
-            await _customerViewModel.LoadDataAsync();
-            Customers = _customerViewModel.Customers;
         }
     }
 }

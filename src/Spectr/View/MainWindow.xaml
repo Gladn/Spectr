@@ -10,9 +10,9 @@
             
     mc:Ignorable="d" MinWidth="1200" MinHeight="600" Height="600" Width="1200" WindowStartupLocation="CenterScreen" WindowStyle="None" Foreground="White">
 
-    <Window.DataContext>
+    <!--<Window.DataContext>
         <vm:MainWindowViewModel/>
-    </Window.DataContext>
+    </Window.DataContext>-->
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"/>
@@ -20,7 +20,12 @@
    
     <!-- Стиль  -->
     <Window.Resources>
-        <!-- Датагрид -->
+        <!-- Вьюшки моделей -->
+        <ResourceDictionary>
+            <vm:CustomerViewModel x:Key="CustomerViewModel" />
+            <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
+
+            <!-- Датагрид -->
         <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
             <Style.Triggers>
                 <Trigger Property="IsSelected" Value="True">
@@ -63,6 +68,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <!-- Главное панель -->
@@ -71,7 +77,7 @@
         <Grid Height="40" DockPanel.Dock="Top"  VerticalAlignment="Top" Background="Gainsboro">
             <Grid HorizontalAlignment="Stretch"  Background="Gainsboro">
                 <Button Content="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF969696" Width="250" FontSize="15" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Cursor="Hand" />
-                <Button Content="" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFA2A2A2" Command="{Binding DragWindowCommand}" Cursor="Cross" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
+                <Button Content="" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFA2A2A2" DataContext="{StaticResource MainWindowViewModel}" Command="{Binding DragWindowCommand}" Cursor="Cross" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch">
                     <Button.InputBindings>
                         <MouseBinding Gesture="LeftClick" Command="{Binding DragWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                     </Button.InputBindings>
@@ -107,8 +113,9 @@
                 <!-- Клиенты -->
                 <TabItem Uid="0" Header="Клиенты" Style="{StaticResource TabItemStyle1}" Cursor="Hand" >
                     <DockPanel>
-                        <DataGrid AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="800" Margin="0 5" 
-                                            ItemsSource="{Binding Customers}" IsReadOnly="True" SelectionUnit="FullRow" SelectionMode="Single" CanUserAddRows="False">
+                        <DataGrid x:Name="CustomerDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="800" Margin="0 5" 
+                                  DataContext="{StaticResource CustomerViewModel}" ItemsSource="{Binding Customers}" IsReadOnly="True" SelectionUnit="FullRow" 
+                                        SelectionMode="Single" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding CustomerID}" Width="50"/>
                                 <DataGridTextColumn Header="Паспорт" Binding="{Binding DocNumber}" Width="120"/>
@@ -141,18 +148,19 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Документ"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.DocNumber, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Имя"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerFirstName, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Фамилия"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerSecontName, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="3" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Отчество"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerPatronymic, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.PhoneNumber, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding ClientInfo.FirstName, Mode=TwoWay}" BorderBrush="#000080"/>
-                                        <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10"/>
+                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.EmailAdress, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10" 
+                                                 DataContext="{StaticResource CustomerViewModel}" Command="{Binding AddCustomerCommand}" />
                                         <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"/>
                                     </Grid>
                                 </Expander>
@@ -192,7 +200,7 @@
                                     </Grid>
                                 </Expander>
                                 <!-- Колонка с delete -->
-                                <Button Content="Удалить клиента" FontSize="16" Cursor="Hand" Margin="5" />
+                                <Button Content="Удалить клиента" FontSize="16" Cursor="Hand" Margin="5" DataContext="{StaticResource CustomerViewModel}" Command="{Binding DeleteCustomerCommand}" CommandParameter="{Binding ElementName=CustomerDataGrid, Path=SelectedItem}" />
                             </StackPanel>
                         </Border>
                     </DockPanel>
@@ -211,7 +219,7 @@
                     </DockPanel>
                 </TabItem>
                 
-                <TabItem Uid="2" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
+                <TabItem Uid="2" Header="Таблица заказов" Style="{StaticResource TabItemStyle1}" Cursor="Hand"></TabItem>
                 <TabItem Uid="3" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
                 <TabItem Uid="4" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
                 <TabItem Uid="5" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>

@@ -99,6 +99,7 @@
     <Compile Include="Model\DeviceCompany.cs" />
     <Compile Include="Model\DeviceCountry.cs" />
     <Compile Include="Model\DeviceType.cs" />
+    <Compile Include="Model\EmployerPosition.cs" />
     <Compile Include="Model\Users.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
