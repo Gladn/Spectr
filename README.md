@@ -4,6 +4,7 @@
 ![изображение](https://github.com/Gladn/Spectr/assets/92585647/956ffe3f-6625-4d30-bdfe-ad717236c0ab)
 ![изображение](https://github.com/Gladn/Spectr/assets/92585647/a0b5d007-f1ca-42fc-9bfb-3e2028080722)
 ![изображение](https://github.com/Gladn/Spectr/assets/92585647/f810c00d-1f98-48c1-8476-b7b0185d1d68)
+![Screenshot_](https://github.com/Gladn/Spectr/assets/92585647/66f36b52-c426-40f4-b9b4-45ef1cb3a56a)
 
 
 Старый вариант на Wnforms
