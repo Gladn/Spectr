@@ -1,11 +1,10 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
+﻿using System;
 
 namespace Spectr.Model
-{
-    public class Customer : INotifyPropertyChanged
+{  
+    internal class Customer 
     {
+        //Думаю вполне можно были и использовать автоматические свойства, указал явно на всякий и для проверок 
         private int _customerID;
         private string _docNumber;
         private string _customerFirstName;
@@ -20,8 +19,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _customerID) return;
-                _customerID = value;
-                OnPropertyChanged();
+                _customerID = value;               
             }
         }
         public string DocNumber
@@ -31,7 +29,6 @@ namespace Spectr.Model
             {
                 if (value == _docNumber) return;
                 _docNumber = value;
-                OnPropertyChanged();
             }
         }
         public string CustomerFirstName
@@ -41,7 +38,6 @@ namespace Spectr.Model
             {
                 if (value == _customerFirstName) return;
                 _customerFirstName = value;
-                OnPropertyChanged();
             }
         }
 
@@ -51,8 +47,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _customerSecontName) return;
-                _customerSecontName = value;
-                OnPropertyChanged();
+                _customerSecontName = value;               
             }
         }
         public string CustomerPatronymic
@@ -61,8 +56,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _customerPatronymic) return;
-                _customerPatronymic = value;
-                OnPropertyChanged();
+                _customerPatronymic = value;               
             }
         }
         public string PhoneNumber
@@ -71,8 +65,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _phoneNumber) return;
-                _phoneNumber = value;
-                OnPropertyChanged();
+                _phoneNumber = value;                
             }
         }
         public string EmailAdress
@@ -82,14 +75,8 @@ namespace Spectr.Model
             {
                 if (value == _emailAdress) return;
                 _emailAdress = value;
-                OnPropertyChanged();
+                
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        }       
     }
 }

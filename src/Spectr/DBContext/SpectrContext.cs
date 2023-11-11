@@ -22,7 +22,7 @@ namespace Spectr.DBContext
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Configurations.Add(new CustomerConfig());
+           // modelBuilder.Configurations.Add(new CustomerConfig());
         }
     }
 }

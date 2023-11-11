@@ -93,14 +93,12 @@
     <Compile Include="Commands\CloseAppCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\LambdaCommand.cs" />
-    <Compile Include="DBContext\CustomerConfig.cs" />
     <Compile Include="DBContext\SpectrContext.cs" />
+    <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Customer.cs" />
-    <Compile Include="Model\DeviceCompany.cs" />
-    <Compile Include="Model\DeviceCountry.cs" />
-    <Compile Include="Model\DeviceType.cs" />
+    <Compile Include="Model\Device.cs" />
+    <Compile Include="Model\Employer.cs" />
     <Compile Include="Model\EmployerPosition.cs" />
-    <Compile Include="Model\Users.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
