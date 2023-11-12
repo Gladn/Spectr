@@ -114,7 +114,7 @@
                 <TabItem Uid="0" Header="Клиенты" Style="{StaticResource TabItemStyle1}" Cursor="Hand" >
                     <DockPanel>
                         <DataGrid x:Name="CustomerDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="800" Margin="0 5"
-                                  DataContext="{StaticResource CustomerViewModel}" ItemsSource="{Binding Customers}"  SelectedItem="{Binding SelectedCustomer}" IsReadOnly="True" SelectionUnit="FullRow" 
+                                  DataContext="{StaticResource CustomerViewModel}" ItemsSource="{Binding Customers}"  SelectedItem="{Binding UpdateSelectedCustomer}" IsReadOnly="True" SelectionUnit="FullRow" 
                                         SelectionMode="Single" CanUserAddRows="False">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding CustomerID}" Width="50"/>
@@ -148,17 +148,17 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Документ"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.DocNumber, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.DocNumber, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Имя"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerFirstName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.CustomerFirstName, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Фамилия"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerSecontName, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.CustomerSecontName, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="3" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Отчество"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.CustomerPatronymic, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.CustomerPatronymic, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.PhoneNumber, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.PhoneNumber, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomer.EmailAdress, Mode=TwoWay}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.EmailAdress, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10" 
                                                  DataContext="{StaticResource CustomerViewModel}" Command="{Binding AddCustomerCommand}" />
                                         <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"/>
@@ -184,17 +184,17 @@
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Документ"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedDocNumber, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.DocNumber, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Имя"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomerFirstName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerFirstName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Фамилия"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomerSecontName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerSecontName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="3" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Отчество"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedCustomerPatronymic, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerPatronymic, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedPhoneNumber, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.PhoneNumber, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding SelectedEmailAdress, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.EmailAdress, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <Button  Grid.Row="6" Grid.Column="0" Margin="10" Content="Изменить" FontSize="16" Cursor="Hand" 
                                                  DataContext="{StaticResource CustomerViewModel}" Command="{Binding UpdateCustomerCommand}"/>
                                         <Button  Grid.Row="6" Grid.Column="1" Margin="10" Content="Отмена" FontSize="16" Cursor="Hand" />

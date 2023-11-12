@@ -15,7 +15,8 @@ namespace Spectr.ViewModel
     {
 
         private ObservableCollection<Customer> _customers;
-        private Customer _selectedCustomer;
+        private Customer _insertSelectedCustomer;
+        private Customer _updateSelectedCustomer;
         public ObservableCollection<Customer> Customers
         {
             get { return _customers; }
@@ -28,101 +29,29 @@ namespace Spectr.ViewModel
                 }
             }
         }
-        public Customer SelectedCustomer
+
+        public Customer InsertSelectedCustomer
         {
-            get => _selectedCustomer;
+            get => _insertSelectedCustomer;
             set
             {
-                if (Equals(value, _selectedCustomer)) return;
-                _selectedCustomer = value;
-                OnPropertyChanged(nameof(SelectedCustomer));
-
-                // При изменении выбранного клиента обновляем текстбоксы
-                OnPropertyChanged(nameof(SelectedDocNumber));
-                OnPropertyChanged(nameof(SelectedCustomerFirstName));
-                OnPropertyChanged(nameof(SelectedCustomerSecontName));
-                OnPropertyChanged(nameof(SelectedCustomerPatronymic));
-                OnPropertyChanged(nameof(SelectedPhoneNumber));
-                OnPropertyChanged(nameof(SelectedEmailAdress));
+                if (Equals(value, _insertSelectedCustomer)) return;
+                _insertSelectedCustomer = value;
+                OnPropertyChanged(nameof(InsertSelectedCustomer));
             }
         }
-
-        public string SelectedCustomerFirstName
+        
+        public Customer UpdateSelectedCustomer
         {
-            get { return SelectedCustomer?.CustomerFirstName; }
+            get => _updateSelectedCustomer;
             set
             {
-                if (SelectedCustomer != null && SelectedCustomer.CustomerFirstName != value)
-                {
-                    SelectedCustomer.CustomerFirstName = value;
-                    OnPropertyChanged(nameof(SelectedCustomerFirstName));
-                }
-            }
-        }
-        public string SelectedDocNumber
-        {
-            get { return SelectedCustomer?.DocNumber; }
-            set
-            {
-                if (SelectedCustomer != null && SelectedCustomer.DocNumber != value)
-                {
-                    SelectedCustomer.DocNumber = value;
-                    OnPropertyChanged(nameof(SelectedDocNumber));
-                }
+                if (Equals(value, _updateSelectedCustomer)) return;
+                _updateSelectedCustomer = value;
+                OnPropertyChanged(nameof(UpdateSelectedCustomer));
             }
         }
 
-        public string SelectedCustomerSecontName
-        {
-            get { return SelectedCustomer?.CustomerSecontName; }
-            set
-            {
-                if (SelectedCustomer != null && SelectedCustomer.CustomerSecontName != value)
-                {
-                    SelectedCustomer.CustomerSecontName = value;
-                    OnPropertyChanged(nameof(SelectedCustomerSecontName));
-                }
-            }
-        }
-
-        public string SelectedCustomerPatronymic
-        {
-            get { return SelectedCustomer?.CustomerPatronymic; }
-            set
-            {
-                if (SelectedCustomer != null && SelectedCustomer.CustomerPatronymic != value)
-                {
-                    SelectedCustomer.CustomerPatronymic = value;
-                    OnPropertyChanged(nameof(SelectedCustomerPatronymic));
-                }
-            }
-        }
-
-        public string SelectedPhoneNumber
-        {
-            get { return SelectedCustomer?.PhoneNumber; }
-            set
-            {
-                if (SelectedCustomer != null && SelectedCustomer.PhoneNumber != value)
-                {
-                    SelectedCustomer.PhoneNumber = value;
-                    OnPropertyChanged(nameof(SelectedPhoneNumber));
-                }
-            }
-        }
-
-        public string SelectedEmailAdress
-        {
-            get { return SelectedCustomer?.EmailAdress; }
-            set
-            {
-                if (SelectedCustomer != null && SelectedCustomer.EmailAdress != value)
-                {
-                    SelectedCustomer.EmailAdress = value;
-                    OnPropertyChanged(nameof(SelectedEmailAdress));
-                }
-            }
-        }
 
         #region Отборажение данных
         private async Task LoadDataAsync()
@@ -162,10 +91,9 @@ namespace Spectr.ViewModel
 
         #endregion
 
+
         #region Добавление клиента
-
         public ICommand AddCustomerCommand { get; }
-
         private bool CanAddCustomerCommandExecute(object parameter)
         {
             // Логика, чтобы определить, можно ли выполнить добавление
@@ -174,12 +102,12 @@ namespace Spectr.ViewModel
 
         private async void OnAddCustomerExecuted(object parameter)
         {
-            if (SelectedCustomer != null)
+            if (InsertSelectedCustomer != null)
             {
-                await AddCustomerAsync(SelectedCustomer);
-                Customers.Add(SelectedCustomer);
-                SelectedCustomer = new Customer();
-                await LoadDataAsync(); // Обновите данные из базы после добавления клиента
+                await AddCustomerAsync(InsertSelectedCustomer);
+                Customers.Add(InsertSelectedCustomer);
+                InsertSelectedCustomer = new Customer();
+                await LoadDataAsync(); 
             }
         }
 
@@ -208,21 +136,18 @@ namespace Spectr.ViewModel
 
 
         #region Удаление клиента
-
         public ICommand DeleteCustomerCommand { get;  }
-
         private bool CanDeleteCustomerCommandExecute(object parameter)
         {
             // Логика, чтобы определить, можно ли выполнить удаление
             return true;
         }
 
-        private void OnDeleteCustomerExecuted(object parameter)
+        private async void OnDeleteCustomerExecuted(object parameter)
         {
-
             if (parameter is Customer customer)
             {
-                DeleteCustomerAsync(customer);
+                await DeleteCustomerAsync(customer);
             }
         }
 
@@ -231,14 +156,12 @@ namespace Spectr.ViewModel
             using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
             {
                 await con.OpenAsync();
-
                 using (SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE CustomerID=@CustomerID", con))
                 {
                     command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
                     command.ExecuteNonQuery(); 
                 }
             }
-
             Customers.Remove(customer);
             OnPropertyChanged(nameof(Customers));          
         }
@@ -247,20 +170,19 @@ namespace Spectr.ViewModel
 
 
         #region Изменение клиента
-
         public ICommand UpdateCustomerCommand { get; }
-
         private bool CanUpdateCustomerCommandExecute(object parameter)
         {
             return true;
         }
 
-        private void OnUpdateCustomerExecuted(object parameter)
+        private async void OnUpdateCustomerExecutedAsync(object parameter)
         {
-            if (SelectedCustomer != null)
+            if (UpdateSelectedCustomer != null)
             {
-                UpdateCustomerAsync(SelectedCustomer);
-                OnPropertyChanged(nameof(SelectedCustomer));
+                UpdateCustomerAsync(UpdateSelectedCustomer);
+                OnPropertyChanged(nameof(UpdateSelectedCustomer));
+                await LoadDataAsync(); 
             }
         }
 
@@ -287,14 +209,6 @@ namespace Spectr.ViewModel
                     await command.ExecuteNonQueryAsync();
                 }
             }
-
-            OnPropertyChanged(nameof(SelectedDocNumber));
-            OnPropertyChanged(nameof(SelectedCustomerFirstName));
-            OnPropertyChanged(nameof(SelectedCustomerSecontName));
-            OnPropertyChanged(nameof(SelectedCustomerPatronymic));
-            OnPropertyChanged(nameof(SelectedPhoneNumber));
-            OnPropertyChanged(nameof(SelectedEmailAdress));
-            OnPropertyChanged(nameof(Customers));
         }
 
         #endregion
@@ -303,7 +217,7 @@ namespace Spectr.ViewModel
         public CustomerViewModel()
         {
             Customers = new ObservableCollection<Customer>();
-            SelectedCustomer = new Customer();
+            InsertSelectedCustomer = new Customer();
 
             LoadDataAsync();
 
@@ -311,7 +225,7 @@ namespace Spectr.ViewModel
 
             DeleteCustomerCommand = new LambdaCommand(OnDeleteCustomerExecuted, CanDeleteCustomerCommandExecute);
 
-            UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecuted, CanUpdateCustomerCommandExecute);
+            UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecutedAsync, CanUpdateCustomerCommandExecute);
         }
     }
 }
