@@ -166,11 +166,11 @@
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
 
-                                      
+
 
                                         <TextBox Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.DocNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertDocNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" ValidatesOnNotifyDataErrors="True" NotifyOnValidationError="True">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="15" NotNullable="True" MinLength="4"/>
                                                     </Binding.ValidationRules>
@@ -178,9 +178,10 @@
                                             </TextBox.Text>
                                         </TextBox>
 
+
                                         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.CustomerFirstName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertCustomerFirstName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
                                                     </Binding.ValidationRules>
@@ -190,7 +191,7 @@
                                         
                                         <TextBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.CustomerSecontName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertCustomerSecontName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
                                                     </Binding.ValidationRules>
@@ -200,7 +201,7 @@
                                         
                                         <TextBox Grid.Row="3" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.CustomerPatronymic" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertCustomerPatronymic" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="20"/>
                                                     </Binding.ValidationRules>
@@ -210,7 +211,7 @@
 
                                         <TextBox Grid.Row="4" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.PhoneNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertPhoneNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="10" NotNullable="True" MinLength="5"/>
                                                     </Binding.ValidationRules>
@@ -220,7 +221,7 @@
 
                                         <TextBox Grid.Row="5" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertSelectedCustomer.EmailAdress" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertEmailAdress" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="20"/>
                                                     </Binding.ValidationRules>
