@@ -157,7 +157,87 @@
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>
                                         <TextBox Grid.Row="4" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.PhoneNumber, Mode=TwoWay}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
+<<<<<<< Updated upstream
                                         <TextBox Grid.Row="5" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.EmailAdress, Mode=TwoWay}" BorderBrush="#000080"/>
+=======
+
+                                      
+
+                                        <!--<TextBox Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.DocNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" ValidatesOnNotifyDataErrors="True" NotifyOnValidationError="True">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="15" NotNullable="True" MinLength="4"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>-->
+
+                                        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}" Text="{Binding InsertSelectedCustomer.DocNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True}">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Validation.HasError" Value="True">
+                                                            <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={x:Static RelativeSource.Self}}" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+
+
+                                        <TextBox Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.CustomerFirstName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                        
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.CustomerSecontName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                        
+                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.CustomerPatronymic" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="20"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+
+                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.PhoneNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="10" NotNullable="True" MinLength="5"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+
+                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
+                                            <TextBox.Text>
+                                                <Binding Path="InsertSelectedCustomer.EmailAdress" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                    <Binding.ValidationRules>
+                                                        <validation:CustomerValidationRule MaxLength="20"/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+
+                                        
+>>>>>>> Stashed changes
                                         <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10" 
                                                  DataContext="{StaticResource CustomerViewModel}" Command="{Binding AddCustomerCommand}" />
                                         <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"/>

@@ -2,6 +2,14 @@
 using Spectr.Commands;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+<<<<<<< Updated upstream
+=======
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices.ComTypes;
+>>>>>>> Stashed changes
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -11,7 +19,7 @@ namespace Spectr.ViewModel
     /// <summary>
     /// Модель представления клиентов с бд
     /// </summary>
-    public class CustomerViewModel : ViewModelBase
+    public class CustomerViewModel : ViewModelBase, INotifyDataErrorInfo
     {
         private ObservableCollection<Customer> _customers;
         private Customer _insertSelectedCustomer;
@@ -31,15 +39,30 @@ namespace Spectr.ViewModel
 
         public Customer InsertSelectedCustomer
         {
+<<<<<<< Updated upstream
             get => _insertSelectedCustomer;
+=======
+            get
+            {
+                if (_insertSelectedCustomer != null && _insertSelectedCustomer.DocNumber != null && _insertSelectedCustomer.DocNumber.Length > 4)
+                {
+                    AddError("The DocNumber must be at least 4 characters long.", nameof(InsertSelectedCustomer.DocNumber));
+                }
+                return _insertSelectedCustomer;
+            }
+>>>>>>> Stashed changes
             set
             {
-                if (Equals(value, _insertSelectedCustomer)) return;
-                _insertSelectedCustomer = value;
-                OnPropertyChanged(nameof(InsertSelectedCustomer));
+                if (value != _insertSelectedCustomer)
+                {
+                    _insertSelectedCustomer = value;
+                    ValidateDocNumber();
+                    OnPropertyChanged(nameof(InsertSelectedCustomer));
+                }
             }
         }
-        
+
+
         public Customer UpdateSelectedCustomer
         {
             get => _updateSelectedCustomer;
@@ -212,19 +235,92 @@ namespace Spectr.ViewModel
 
         #endregion
 
+<<<<<<< Updated upstream
+=======
+
+        private Dictionary<string, List<string>> _propertyNameToErrorsDictionary;
+
+        public bool HasErrors => _propertyNameToErrorsDictionary.Any();
+
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+
+        private void ValidateDocNumber()
+        {
+            if (InsertSelectedCustomer.DocNumber != null) ClearErrors(nameof(InsertSelectedCustomer.DocNumber));
+            else  if (_insertSelectedCustomer != null && _insertSelectedCustomer.DocNumber != null && _insertSelectedCustomer.DocNumber.Length > 4)
+            {
+                AddError("The DocNumber must be at least 4 characters long.", nameof(InsertSelectedCustomer.DocNumber));
+            }
+        }
+
+        public IEnumerable GetErrors(string propertyName)
+        {
+            if (_propertyNameToErrorsDictionary.ContainsKey(propertyName))
+            {
+                return _propertyNameToErrorsDictionary[propertyName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
+
+        private void AddError(string errorMessage, string propertyName)
+        {
+            if (_propertyNameToErrorsDictionary == null)
+            {
+                _propertyNameToErrorsDictionary = new Dictionary<string, List<string>>();
+            }
+
+            if (!_propertyNameToErrorsDictionary.ContainsKey(propertyName))
+            {
+                _propertyNameToErrorsDictionary.Add(propertyName, new List<string>());
+            }
+
+            _propertyNameToErrorsDictionary[propertyName].Add(errorMessage);
+
+            OnErrorsChanged(propertyName);
+        }
+
+        private void ClearErrors(string propertyName)
+        {
+            _propertyNameToErrorsDictionary.Remove(propertyName);
+
+            OnErrorsChanged(propertyName);
+        }
+
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
+
+>>>>>>> Stashed changes
 
         public CustomerViewModel()
         {
             Customers = new ObservableCollection<Customer>();
             InsertSelectedCustomer = new Customer();
 
+<<<<<<< Updated upstream
             LoadDataAsync();
+=======
+            Task task = LoadDataAsync();
+>>>>>>> Stashed changes
 
             AddCustomerCommand = new LambdaCommand(OnAddCustomerExecuted, CanAddCustomerCommandExecute);
 
             DeleteCustomerCommand = new LambdaCommand(OnDeleteCustomerExecuted, CanDeleteCustomerCommandExecute);
 
             UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecutedAsync, CanUpdateCustomerCommandExecute);
+<<<<<<< Updated upstream
+=======
+
+           
+            
+            
+>>>>>>> Stashed changes
         }
     }
 }
