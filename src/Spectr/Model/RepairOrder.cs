@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Spectr.Model
 {
-    internal class RepairOrder
+    public class RepairOrder
     {
         public int OrderID { get; set; }
         public DateTime DateStart { get; set; }

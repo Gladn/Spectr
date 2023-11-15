@@ -1,8 +1,9 @@
 ﻿using System;
 
+
 namespace Spectr.Model
 {
-    internal class Device
+    public class Device
     {
         public int DeviceID { get; set; }
         public string SerialNumber { get; set; }

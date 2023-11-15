@@ -2,13 +2,16 @@
 
 namespace Spectr.Model
 {
-    internal class RepairCategory
+    public class RepairCategory
     {
         public int CategoryID { get; set; }
         public string Category { get; set; }
     }
 
-    internal class RepairCategoryJunction
+    /// <summary>
+    /// Заказы/Категории на случай многие ко многим (Категорий ремонта может быть неск)
+    /// </summary>
+    public class RepairCategoryJunction
     {
         public int JunctionID { get; set; }
         public int OrderID { get; set; }

@@ -1,10 +1,19 @@
-﻿using Spectr.Model;
-using Spectr.Commands;
+﻿using Spectr.Commands;
+using Spectr.Model;
+using Spectr.Validations;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
-
 
 namespace Spectr.ViewModel
 {
@@ -16,6 +25,7 @@ namespace Spectr.ViewModel
         private ObservableCollection<Customer> _customers;
         private Customer _insertSelectedCustomer;
         private Customer _updateSelectedCustomer;
+
         public ObservableCollection<Customer> Customers
         {
             get { return _customers; }
@@ -31,7 +41,10 @@ namespace Spectr.ViewModel
 
         public Customer InsertSelectedCustomer
         {
-            get => _insertSelectedCustomer;
+            get
+            {
+                return _insertSelectedCustomer;
+            }
             set
             {
                 if (Equals(value, _insertSelectedCustomer)) return;
@@ -50,7 +63,7 @@ namespace Spectr.ViewModel
                 OnPropertyChanged(nameof(UpdateSelectedCustomer));
             }
         }
-
+       
 
         #region Отборажение данных
         private async Task LoadDataAsync()
@@ -77,9 +90,9 @@ namespace Spectr.ViewModel
                             DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
                             CustomerFirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
                             CustomerSecontName = reader.GetString(reader.GetOrdinal("CustomerSecontName")),
-                            CustomerPatronymic = reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
+                            CustomerPatronymic = reader.IsDBNull(reader.GetOrdinal("CustomerPatronymic")) ? null : reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
                             PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            EmailAdress = reader.GetString(reader.GetOrdinal("EmailAdress"))
+                            EmailAdress = reader.IsDBNull(reader.GetOrdinal("EmailAdress")) ? null : reader.GetString(reader.GetOrdinal("EmailAdress")),
                         };
                         customers.Add(customer);
                     }
@@ -95,7 +108,6 @@ namespace Spectr.ViewModel
         public ICommand AddCustomerCommand { get; }
         private bool CanAddCustomerCommandExecute(object parameter)
         {
-            // Логика, чтобы определить, можно ли выполнить добавление
             return true;
         }
 
@@ -106,7 +118,8 @@ namespace Spectr.ViewModel
                 await AddCustomerAsync(InsertSelectedCustomer);
                 Customers.Add(InsertSelectedCustomer);
                 InsertSelectedCustomer = new Customer();
-                await LoadDataAsync(); 
+                await LoadDataAsync();
+
             }
         }
 
@@ -122,9 +135,9 @@ namespace Spectr.ViewModel
                     command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
                     command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
                     command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
-                    command.Parameters.AddWithValue("@CustomerPatronymic", customer.CustomerPatronymic);
+                    command.Parameters.AddWithValue("@CustomerPatronymic", string.IsNullOrEmpty(customer.CustomerPatronymic) ? (object)DBNull.Value : customer.CustomerPatronymic);
                     command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
-                    command.Parameters.AddWithValue("@EmailAdress", customer.EmailAdress);
+                    command.Parameters.AddWithValue("@EmailAdress", string.IsNullOrEmpty(customer.EmailAdress) ? (object)DBNull.Value : customer.EmailAdress);
 
                     await command.ExecuteNonQueryAsync();
                 }
@@ -135,10 +148,9 @@ namespace Spectr.ViewModel
 
 
         #region Удаление клиента
-        public ICommand DeleteCustomerCommand { get;  }
+        public ICommand DeleteCustomerCommand { get; }
         private bool CanDeleteCustomerCommandExecute(object parameter)
-        {
-            // Логика, чтобы определить, можно ли выполнить удаление
+        {           
             return true;
         }
 
@@ -158,11 +170,11 @@ namespace Spectr.ViewModel
                 using (SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE CustomerID=@CustomerID", con))
                 {
                     command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
-                    command.ExecuteNonQuery(); 
+                    command.ExecuteNonQuery();
                 }
             }
             Customers.Remove(customer);
-            OnPropertyChanged(nameof(Customers));          
+            OnPropertyChanged(nameof(Customers));
         }
 
         #endregion
@@ -170,6 +182,7 @@ namespace Spectr.ViewModel
 
         #region Изменение клиента
         public ICommand UpdateCustomerCommand { get; }
+
         private bool CanUpdateCustomerCommandExecute(object parameter)
         {
             return true;
@@ -181,7 +194,7 @@ namespace Spectr.ViewModel
             {
                 await UpdateCustomerAsync(UpdateSelectedCustomer);
                 OnPropertyChanged(nameof(UpdateSelectedCustomer));
-                await LoadDataAsync(); 
+                await LoadDataAsync();
             }
         }
 
@@ -212,12 +225,27 @@ namespace Spectr.ViewModel
 
         #endregion
 
+        private bool _isAddButtonEnabled = false;
+
+        public bool IsAddButtonEnabled
+        {
+            get { return _isAddButtonEnabled; }
+            set
+            {
+                if (_isAddButtonEnabled != value)
+                {
+                    _isAddButtonEnabled = value;
+                    OnPropertyChanged(nameof(IsAddButtonEnabled));
+                }
+            }
+        }
+
 
         public CustomerViewModel()
         {
             Customers = new ObservableCollection<Customer>();
             InsertSelectedCustomer = new Customer();
-
+            
             LoadDataAsync();
 
             AddCustomerCommand = new LambdaCommand(OnAddCustomerExecuted, CanAddCustomerCommandExecute);
@@ -225,6 +253,19 @@ namespace Spectr.ViewModel
             DeleteCustomerCommand = new LambdaCommand(OnDeleteCustomerExecuted, CanDeleteCustomerCommandExecute);
 
             UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecutedAsync, CanUpdateCustomerCommandExecute);
+
+
+            CustomerValidationRule validationRule = new CustomerValidationRule();
+           
+            
+            validationRule.PropertyChanged += (sender, args) =>
+            {
+                if (args.PropertyName == nameof(validationRule.IsAddButtonEnabled))
+                {
+                    IsAddButtonEnabled = validationRule.IsAddButtonEnabled;
+                }
+            };
         }
+
     }
 }

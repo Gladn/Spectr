@@ -1,10 +1,10 @@
 ﻿using System;
 
+
 namespace Spectr.Model
 {  
-    public class Customer 
+    public class Customer
     {
-        //Думаю вполне можно были и использовать автоматические свойства, указал явно на всякий и для проверок 
         private int _customerID;
         private string _docNumber;
         private string _customerFirstName;
@@ -19,9 +19,10 @@ namespace Spectr.Model
             set
             {
                 if (value == _customerID) return;
-                _customerID = value;               
+                _customerID = value;
             }
         }
+        
         public string DocNumber
         {
             get => _docNumber;
@@ -31,6 +32,7 @@ namespace Spectr.Model
                 _docNumber = value;
             }
         }
+
         public string CustomerFirstName
         {
             get => _customerFirstName;
@@ -40,14 +42,13 @@ namespace Spectr.Model
                 _customerFirstName = value;
             }
         }
-
         public string CustomerSecontName
         {
             get => _customerSecontName;
             set
             {
                 if (value == _customerSecontName) return;
-                _customerSecontName = value;               
+                _customerSecontName = value;
             }
         }
         public string CustomerPatronymic
@@ -56,7 +57,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _customerPatronymic) return;
-                _customerPatronymic = value;               
+                _customerPatronymic = value;
             }
         }
         public string PhoneNumber
@@ -65,7 +66,7 @@ namespace Spectr.Model
             set
             {
                 if (value == _phoneNumber) return;
-                _phoneNumber = value;                
+                _phoneNumber = value;
             }
         }
         public string EmailAdress
@@ -75,7 +76,6 @@ namespace Spectr.Model
             {
                 if (value == _emailAdress) return;
                 _emailAdress = value;
-                
             }
         }       
     }
