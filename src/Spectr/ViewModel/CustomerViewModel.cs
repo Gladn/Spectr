@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 
@@ -153,29 +154,37 @@ namespace Spectr.ViewModel
         {
             ObservableCollection<Customer> customers = new ObservableCollection<Customer>();
 
-            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+            try
             {
-                await con.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Customer", con))
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
                 {
-                    while (await reader.ReadAsync())
+                    await con.OpenAsync();
+
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM Customer", con))
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        Customer customer = new Customer
+                        while (await reader.ReadAsync())
                         {
-                            CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
-                            DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
-                            CustomerFirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
-                            CustomerSecontName = reader.GetString(reader.GetOrdinal("CustomerSecontName")),
-                            CustomerPatronymic = reader.IsDBNull(reader.GetOrdinal("CustomerPatronymic")) ? null : reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
-                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            EmailAdress = reader.IsDBNull(reader.GetOrdinal("EmailAdress")) ? null : reader.GetString(reader.GetOrdinal("EmailAdress")),
-                        };
-                        customers.Add(customer);
+                            Customer customer = new Customer
+                            {
+                                CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
+                                DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
+                                CustomerFirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
+                                CustomerSecontName = reader.GetString(reader.GetOrdinal("CustomerSecontName")),
+                                CustomerPatronymic = reader.IsDBNull(reader.GetOrdinal("CustomerPatronymic")) ? null : reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                                EmailAdress = reader.IsDBNull(reader.GetOrdinal("EmailAdress")) ? null : reader.GetString(reader.GetOrdinal("EmailAdress")),
+                            };
+                            customers.Add(customer);
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка отображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
             return customers;
         }
 
@@ -228,22 +237,29 @@ namespace Spectr.ViewModel
 
         public async Task AddCustomerAsync(Customer customer)
         {
-            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+            try
             {
-                await con.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand("INSERT INTO Customer " +
-                                                           "VALUES (@DocNumber, @CustomerFirstName, @CustomerSecontName, @CustomerPatronymic, @PhoneNumber, @EmailAdress)", con))
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
                 {
-                    command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
-                    command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
-                    command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
-                    command.Parameters.AddWithValue("@CustomerPatronymic", string.IsNullOrEmpty(customer.CustomerPatronymic) ? (object)DBNull.Value : customer.CustomerPatronymic);
-                    command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
-                    command.Parameters.AddWithValue("@EmailAdress", string.IsNullOrEmpty(customer.EmailAdress) ? (object)DBNull.Value : customer.EmailAdress);
+                    await con.OpenAsync();
 
-                    await command.ExecuteNonQueryAsync();
+                    using (SqlCommand command = new SqlCommand("INSERT INTO Customer " +
+                                                               "VALUES (@DocNumber, @CustomerFirstName, @CustomerSecontName, @CustomerPatronymic, @PhoneNumber, @EmailAdress)", con))
+                    {
+                        command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
+                        command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
+                        command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
+                        command.Parameters.AddWithValue("@CustomerPatronymic", string.IsNullOrEmpty(customer.CustomerPatronymic) ? (object)DBNull.Value : customer.CustomerPatronymic);
+                        command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
+                        command.Parameters.AddWithValue("@EmailAdress", string.IsNullOrEmpty(customer.EmailAdress) ? (object)DBNull.Value : customer.EmailAdress);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка добавления: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -267,17 +283,25 @@ namespace Spectr.ViewModel
 
         public async Task DeleteCustomerAsync(Customer customer)
         {
-            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+            try
             {
-                await con.OpenAsync();
-                using (SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE CustomerID=@CustomerID", con))
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
                 {
-                    command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
-                    command.ExecuteNonQuery();
+                    await con.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("DELETE FROM Customer WHERE CustomerID=@CustomerID", con))
+                    {
+                        command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
+
+                Customers.Remove(customer);
+                OnPropertyChanged(nameof(Customers));
             }
-            Customers.Remove(customer);
-            OnPropertyChanged(nameof(Customers));
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion
@@ -303,26 +327,33 @@ namespace Spectr.ViewModel
 
         public async Task UpdateCustomerAsync(Customer customer)
         {
-            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+            try
             {
-                await con.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand("UPDATE Customer " +
-                                                           "SET DocNumber=@DocNumber, CustomerFirstName=@CustomerFirstName, " +
-                                                           "CustomerSecontName=@CustomerSecontName, CustomerPatronymic=@CustomerPatronymic, " +
-                                                           "PhoneNumber=@PhoneNumber, EmailAdress=@EmailAdress " +
-                                                           "WHERE CustomerID=@CustomerID", con))
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
                 {
-                    command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
-                    command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
-                    command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
-                    command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
-                    command.Parameters.AddWithValue("@CustomerPatronymic", customer.CustomerPatronymic);
-                    command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
-                    command.Parameters.AddWithValue("@EmailAdress", customer.EmailAdress);
+                    await con.OpenAsync();
 
-                    await command.ExecuteNonQueryAsync();
+                    using (SqlCommand command = new SqlCommand("UPDATE Customer " +
+                                                               "SET DocNumber=@DocNumber, CustomerFirstName=@CustomerFirstName, " +
+                                                               "CustomerSecontName=@CustomerSecontName, CustomerPatronymic=@CustomerPatronymic, " +
+                                                               "PhoneNumber=@PhoneNumber, EmailAdress=@EmailAdress " +
+                                                               "WHERE CustomerID=@CustomerID", con))
+                    {
+                        command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
+                        command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
+                        command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
+                        command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
+                        command.Parameters.AddWithValue("@CustomerPatronymic", customer.CustomerPatronymic);
+                        command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
+                        command.Parameters.AddWithValue("@EmailAdress", customer.EmailAdress);
+
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка обновления: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -449,7 +480,6 @@ namespace Spectr.ViewModel
             DeleteCustomerCommand = new LambdaCommand(OnDeleteCustomerExecuted, CanDeleteCustomerCommandExecute);
 
             UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecutedAsync, CanUpdateCustomerCommandExecute);
-
 
         }
     }
