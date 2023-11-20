@@ -1,8 +1,4 @@
 ﻿using Spectr.Commands;
-using Spectr.Model;
-using System.Collections.ObjectModel;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,13 +11,15 @@ namespace Spectr.ViewModel
         #region Заголовок
         private string _Title = "Мастерская ремонта Spectr";
 
-        public string Title { 
-            get { return _Title; } 
-            set {
+        public string Title
+        {
+            get { return _Title; }
+            set
+            {
                 if (Equals(_Title, value)) return;
                 _Title = value;
                 OnPropertyChanged();
-            } 
+            }
         }
         #endregion
 
@@ -48,6 +46,7 @@ namespace Spectr.ViewModel
         }
         #endregion
 
+
         #region Комманда перемещения приложения
         public ICommand DragWindowCommand { get; }
         private bool CanDragWindowCommandExecute(object p) => true;
@@ -56,10 +55,10 @@ namespace Spectr.ViewModel
             if (p is Window window) window.DragMove();
         }
         #endregion
-      
+
 
         #endregion
-       
+
         public MainWindowViewModel()
         {
             #region Команды
@@ -67,9 +66,9 @@ namespace Spectr.ViewModel
             CloseAppCommand = new LambdaCommand(OnCloseAppCommandExecuted, CanCloseAppCommandExecute);
 
             DragWindowCommand = new LambdaCommand(OnDragWindowCommandExecuted, CanDragWindowCommandExecute);
-           
-            #endregion           
-        
+
+            #endregion
+
         }
     }
 }

@@ -23,6 +23,7 @@
             <vm:CustomerViewModel x:Key="CustomerViewModel" />
             <vm:DeviceViewModel x:Key="DeviceViewModel" />
             <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
+            <vm:OrderViewModel x:Key="OrderViewModel" />
                
             <!-- Датагрид -->
             <Style x:Key="DataGridRowStyle" TargetType="DataGridRow">
@@ -167,7 +168,6 @@
                                         <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Email"/><Run Text=":"/></TextBlock>
 
 
-
                                         <TextBox Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
                                                 <Binding Path="InsertDocNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" ValidatesOnNotifyDataErrors="True" NotifyOnValidationError="True">
@@ -177,7 +177,6 @@
                                                 </Binding>
                                             </TextBox.Text>
                                         </TextBox>
-
 
                                         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
@@ -229,7 +228,6 @@
                                             </TextBox.Text>
                                         </TextBox>
 
-                                        
                                         <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10" 
                                                  DataContext="{StaticResource CustomerViewModel}" Command="{Binding AddCustomerCommand}"  IsEnabled="{Binding IsAddButtonEnabled}"/>
                                         <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"/>
@@ -296,9 +294,36 @@
 
                     </DockPanel>
                 </TabItem>
-
+                
+                <!-- Вкладка Заказов -->
                 <TabItem Uid="2" Header="Таблица заказов" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
+                    <DockPanel>
+                        <DataGrid x:Name="RepairOrderDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0 5" 
+                                  DataContext="{StaticResource OrderViewModel}" ItemsSource="{Binding Orders}" IsReadOnly="True" SelectionUnit="FullRow" 
+                                        SelectionMode="Single" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ID" Binding="{Binding OrderID}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Дата начала" Binding="{Binding DateStart, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                <DataGridTextColumn Header="ID клиента" Binding="{Binding CustomerID}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Документ клиента" Binding="{Binding Customer.DocNumber}" />
+                                <DataGridTextColumn Header="Имя клиента" Binding="{Binding Customer.CustomerFirstName}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Фамилия клиента" Binding="{Binding Customer.CustomerSecontName}" />
+                                <DataGridTextColumn Header="Отчество клиента" Binding="{Binding Customer.CustomerPatronymic}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="ID устройства" Binding="{Binding DeviceID}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Серийный номер" Binding="{Binding Device.SerialNumber}" />
+                                <DataGridTextColumn Header="Модель устройства" Binding="{Binding Device.Model}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="ID работника" Binding="{Binding EmployerID}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Имя работника" Binding="{Binding Employer.EmFirstName}"/>
+                                <DataGridTextColumn Header="Фамилия работника" Binding="{Binding Employer.EmSecondName}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Дата окончания" Binding="{Binding PlainDateEnd, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" />
+                                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" />
+                                <DataGridTextColumn Header="Общая стоимость" Binding="{Binding TotalCost}" />
+                                <DataGridTextColumn Header="Комментарий" Binding="{Binding Comment}" Width="200"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
+                     </DockPanel>
                 </TabItem>
                 <TabItem Uid="3" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
                 <TabItem Uid="4" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
