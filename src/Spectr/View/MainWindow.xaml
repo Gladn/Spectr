@@ -117,6 +117,8 @@
         </Grid>
 
         
+        
+        
         <!-- Центр -->
         <Grid Margin="10 0" Background="#FFCFCECE">
             <Grid.RowDefinitions>
@@ -126,7 +128,7 @@
                 <!-- Вкладка Клиенты -->
                 <TabItem Uid="0" Header="Клиенты" Style="{StaticResource TabItemStyle1}" Cursor="Hand" >
                     <DockPanel>
-                        <DataGrid x:Name="CustomerDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="800" Margin="0 5"
+                        <DataGrid x:Name="CustomerDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Margin="0 5"
                                   DataContext="{StaticResource CustomerViewModel}" ItemsSource="{Binding Customers}"  SelectedItem="{Binding UpdateSelectedCustomer}" IsReadOnly="True" SelectionUnit="FullRow" 
                                         SelectionMode="Single" CanUserAddRows="False">
                             <DataGrid.Columns>
@@ -139,9 +141,10 @@
                                 <DataGridTextColumn Header="Email" Binding="{Binding EmailAdress}"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <!-- Колонка с insert -->
+                        <!--  -->
                         <Border Grid.Column="1" BorderThickness="1" Height="400" Width="300" HorizontalAlignment="Left" Margin="40, 0" CornerRadius="3" BorderBrush="Blue">
                             <StackPanel>
+                                <!-- Колонка с insert -->
                                 <Expander Header="Добавить клиента" Background="#FFCFCECE" Foreground="#FF2196F3" FontSize="17">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -276,6 +279,8 @@
                     </DockPanel>
                 </TabItem>
 
+                
+                
                 <!-- Вкладка Устройства -->
                 <TabItem Uid="1" Header="Устройства" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
                     <DockPanel>
@@ -295,39 +300,118 @@
                     </DockPanel>
                 </TabItem>
                 
+                
+                
                 <!-- Вкладка Заказов -->
                 <TabItem Uid="2" Header="Таблица заказов" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
                     <DockPanel>
-                        <DataGrid x:Name="RepairOrderDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0 5" 
+                        <DataGrid x:Name="RepairOrderDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0 5" Width="800"
                                   DataContext="{StaticResource OrderViewModel}" ItemsSource="{Binding Orders}" IsReadOnly="True" SelectionUnit="FullRow" 
-                                        SelectionMode="Single" CanUserAddRows="False">
+                                        SelectionMode="Single" CanUserAddRows="False" DockPanel.Dock="Left">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding OrderID}" Visibility="Collapsed"/>
                                 <DataGridTextColumn Header="Дата начала" Binding="{Binding DateStart, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                <DataGridTextColumn Header="Дата окончания" Binding="{Binding PlainDateEnd, StringFormat=\{0:dd.MM.yyyy\}}" />
+                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Cтоимость" Binding="{Binding TotalCost}" />
                                 <DataGridTextColumn Header="ID клиента" Binding="{Binding CustomerID}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Документ клиента" Binding="{Binding Customer.DocNumber}" />
-                                <DataGridTextColumn Header="Имя клиента" Binding="{Binding Customer.CustomerFirstName}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Фамилия клиента" Binding="{Binding Customer.CustomerSecontName}" />
+                                <DataGridTextColumn Header="Документ клиента" Binding="{Binding Customer.DocNumber}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="Имя клиента" Binding="{Binding ShortFullName}" Visibility="Collapsed"/>
+                                <DataGridTextColumn Header="ФИО клиента" Binding="{Binding CustomerShortFullName}" />
                                 <DataGridTextColumn Header="Отчество клиента" Binding="{Binding Customer.CustomerPatronymic}" Visibility="Collapsed"/>
                                 <DataGridTextColumn Header="ID устройства" Binding="{Binding DeviceID}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Серийный номер" Binding="{Binding Device.SerialNumber}" />
+                                <DataGridTextColumn Header="Серийный устройства" Binding="{Binding Device.SerialNumber}" />
                                 <DataGridTextColumn Header="Модель устройства" Binding="{Binding Device.Model}" Visibility="Collapsed"/>
                                 <DataGridTextColumn Header="ID работника" Binding="{Binding EmployerID}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Имя работника" Binding="{Binding Employer.EmFirstName}"/>
+                                <DataGridTextColumn Header="ФИО работника" Binding="{Binding EmShortFullName}"/>
                                 <DataGridTextColumn Header="Фамилия работника" Binding="{Binding Employer.EmSecondName}" Visibility="Collapsed"/>
-                                <DataGridTextColumn Header="Дата окончания" Binding="{Binding PlainDateEnd, StringFormat=\{0:dd.MM.yyyy\}}" />
-                                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" />
-                                <DataGridTextColumn Header="Скидка" Binding="{Binding Discount}" />
-                                <DataGridTextColumn Header="Общая стоимость" Binding="{Binding TotalCost}" />
                                 <DataGridTextColumn Header="Комментарий" Binding="{Binding Comment}" Width="200"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        
+                        <Border Grid.Column="1" BorderThickness="1" Height="400" Width="300" HorizontalAlignment="Right" Margin="40, 0" CornerRadius="3" BorderBrush="Blue" DockPanel.Dock="Right">
+                            <StackPanel>
+                                <!-- Колонка с insert -->
+                                <Expander Header="Добавить заказ" Background="#FFCFCECE" Foreground="#FF2196F3" FontSize="13">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Дата начала"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Дата окончания"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Скидка(%)"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Стоимость"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Клиенты"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="5" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Устройства"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="6" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Работник"/><Run Text=":"/></TextBlock>
+                                        <TextBlock Grid.Row="7" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Комментарий"/><Run Text=":"/></TextBlock>
 
-                     </DockPanel>
+                                        <DatePicker Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" 
+                                                    DataContext="{StaticResource CustomerViewModel}" 
+                                                    SelectedDate="{Binding InsertDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                    DisplayDateStart="{Binding MinimumAllowedDate}" 
+                                                    DisplayDateEnd="{Binding MaximumAllowedDate}">
+                                        </DatePicker>
+
+                                        <DatePicker Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" 
+                                                    DataContext="{StaticResource CustomerViewModel}" 
+                                                    SelectedDate="{Binding InsertDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                    DisplayDateStart="{Binding MinimumAllowedDate}" 
+                                                    DisplayDateEnd="{Binding MaximumAllowedDate}">
+                                        </DatePicker>
+
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                 >
+                                        </TextBox>
+                                        <TextBox Grid.Row="3" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                 >
+                                        </TextBox>
+
+                                        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                 >
+                                        </TextBox>
+                                        
+                                        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                 >
+                                        </TextBox>
+                                        <ComboBox Grid.Row="6" Grid.Column="1" Margin="5" BorderBrush="#000080">
+                                        </ComboBox>
+                                        <TextBox Grid.Row="7" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                 >
+                                        </TextBox>
+                                        
+
+                                        <Button  Grid.Row="8" Grid.Column="0" Content="Добавить" FontSize="14" Cursor="Hand" Margin="10" 
+                                                 DataContext="{StaticResource OrderViewModel}" Command="{Binding AddCommand}"  IsEnabled="{Binding IsAddButtonEnabled}"/>
+                                        <Button  Grid.Row="8" Grid.Column="1" Content="Отмена" FontSize="14" Cursor="Hand" Margin="10"/>
+                                    </Grid>
+                                </Expander>
+                               
+                                
+                                
+                            </StackPanel>
+                        </Border>
+                    </DockPanel>
                 </TabItem>
-                <TabItem Uid="3" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
-                <TabItem Uid="4" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
-                <TabItem Uid="5" Header="Табличка" Style="{StaticResource TabItemStyle1}"></TabItem>
+                
+                
+                <TabItem Uid="3" Header="Служебное" Style="{StaticResource TabItemStyle1}"></TabItem>
+                <TabItem Uid="4" Header="Отчет #1" Style="{StaticResource TabItemStyle1}"></TabItem>
+                <TabItem Uid="5" Header="Отчет #2" Style="{StaticResource TabItemStyle1}" Cursor="Hand"></TabItem>
             </TabControl>
         </Grid>
     </DockPanel>

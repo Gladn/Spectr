@@ -16,8 +16,7 @@ Foreign key (PositionID) references EmployerPosition);
 
 create table Customer
 (CustomerID int not null primary key identity,
-CustomerType bit not null,
-DocNumber char(19) UNIQUE,
+DocNumber nvarchar(19) not null UNIQUE,
 CustomerFirstName varchar(100) not null,
 CustomerSecontName varchar(100) not null,
 CustomerPatronymic varchar(100),
@@ -72,12 +71,12 @@ VALUES ('Макаров','Михаил','89928941139',100000,1),
 ('Гордеев','Александр','89960931185',30000,3);
 
 INSERT INTO Customer
-VALUES (0,'4512 566936','Виноградов', 'Марк', 'Данилович','89926481590',''),
-(0, '4872 991328','Попов','Вячесла', 'Артёмович','89921635690','popov54@mail.ru'),
-(0, '4557 400900','Суворова', 'Сабина', 'Данииловна','89996032759','Davilov1999@mail.ru'),
-(0, '4911 291923','Григорьева', 'Ксения', 'Егоровна','89991579952','GrigorievafKS@list.ru'),
-(0, '4133 577607','Баранова', 'Маргарита', 'Николаевна','89998791233',''),
-(0, '4924 216200','Кузнецов', 'Дмитрий', '','89996638907','');
+VALUES ('4512 566936','Виноградов', 'Марк', 'Данилович','89926481590',''),
+('4872 991328','Попов','Вячесла', 'Артёмович','89921635690','popov54@mail.ru'),
+('4557 400900','Суворова', 'Сабина', 'Данииловна','89996032759','Davilov1999@mail.ru'),
+('4911 291923','Григорьева', 'Ксения', 'Егоровна','89991579952','GrigorievafKS@list.ru'),
+('4133 577607','Баранова', 'Маргарита', 'Николаевна','89998791233',''),
+('4924 216200','Кузнецов', 'Дмитрий', '','89996638907','');
 
 select * from Customer
 
@@ -126,3 +125,35 @@ join RepairCategory on RepairCategory.CategoryID = RepairCategoryJunction.Catego
 Order by Repair.OrderID
 
 SELECT CustomerID AS PersonId, CustomerFirstName AS FirstName, CustomerSecontName AS LastName, DocNumber AS Passport FROM Customer
+
+delete from Customer where CustomerID = 2
+
+drop table RepairCategoryJunction
+drop table Repair
+drop table Customer
+drop table Device 
+drop table EmployerPosition
+
+
+
+--Для отобржения заказов--
+select OrderID, DateStart, Customer.CustomerID, DocNumber, CustomerFirstName, CustomerSecontName, CustomerPatronymic,
+Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName,
+PlainDateEnd, Status, Discount, TotalCost, Comment from Repair
+join Employer on Employer.EmployerID = Repair.EmployerID
+join Customer on Customer.CustomerID = Repair.CustomerID
+join Device on Device.DeviceID = Repair.DeviceID
+
+
+--Для отобржения заказов (Формат фамилия/имя)  --
+SELECT OrderID, DateStart,
+CONCAT(CustomerSecontName, ' ', LEFT(CustomerFirstName, 1) + '.',
+       CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS CustomerShortFullName,
+Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName,
+CONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS EmShortFullName,
+PlainDateEnd, Status, Discount, TotalCost, Comment
+FROM Repair
+JOIN Employer ON Employer.EmployerID = Repair.EmployerID
+JOIN Customer ON Customer.CustomerID = Repair.CustomerID
+JOIN Device ON Device.DeviceID = Repair.DeviceID
+
