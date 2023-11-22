@@ -18,7 +18,7 @@ create table Customer
 (CustomerID int not null primary key identity,
 DocNumber nvarchar(19) not null UNIQUE,
 CustomerFirstName varchar(100) not null,
-CustomerSecontName varchar(100) not null,
+CustomerSecondName varchar(100) not null,
 CustomerPatronymic varchar(100),
 PhoneNumber char(11) not null UNIQUE,
 EmailAdress varchar(50));
@@ -65,18 +65,18 @@ INSERT INTO RepairCategory
 VALUES ('Ремонт стекла'),('Смена батареи'),('Ремонт корпуса'),('Смена прошивки');
 
 INSERT INTO Employer
-VALUES ('Макаров','Михаил','89928941139',100000,1),
-('Столяров','Игорь','89912349710',70000,2),
-('Парфенов','Даниил','89968150062',40000,3),
-('Гордеев','Александр','89960931185',30000,3);
+VALUES ('Михаил','Макаров','89928941139',100000,1),
+('Игорь','Столяров','89912349710',70000,2),
+('Даниил','Парфенов','89968150062',40000,3),
+('Александр', 'Гордеев','89960931185',30000,3);
 
 INSERT INTO Customer
-VALUES ('4512 566936','Виноградов', 'Марк', 'Данилович','89926481590',''),
-('4872 991328','Попов','Вячесла', 'Артёмович','89921635690','popov54@mail.ru'),
-('4557 400900','Суворова', 'Сабина', 'Данииловна','89996032759','Davilov1999@mail.ru'),
-('4911 291923','Григорьева', 'Ксения', 'Егоровна','89991579952','GrigorievafKS@list.ru'),
-('4133 577607','Баранова', 'Маргарита', 'Николаевна','89998791233',''),
-('4924 216200','Кузнецов', 'Дмитрий', '','89996638907','');
+VALUES ('4512 566936', 'Марк', 'Виноградов','Данилович','89926481590',''),
+('4872 991328','Вячесла', 'Попов', 'Артёмович','89921635690','popov54@mail.ru'),
+('4557 400900', 'Сабина', 'Суворова','Данииловна','89996032759','Davilov1999@mail.ru'),
+('4911 291923', 'Ксения','Григорьева', 'Егоровна','89991579952','GrigorievafKS@list.ru'),
+('4133 577607', 'Маргарита','Баранова', 'Николаевна','89998791233',''),
+('4924 216200', 'Дмитрий', 'Кузнецов', '','89996638907','');
 
 select * from Customer
 
@@ -124,20 +124,22 @@ join RepairCategory on RepairCategory.CategoryID = RepairCategoryJunction.Catego
 --where Customer.CustomerID like 3
 Order by Repair.OrderID
 
-SELECT CustomerID AS PersonId, CustomerFirstName AS FirstName, CustomerSecontName AS LastName, DocNumber AS Passport FROM Customer
+SELECT CustomerID AS PersonId, CustomerFirstName AS FirstName, CustomerSecondName AS LastName, DocNumber AS Passport FROM Customer
 
 delete from Customer where CustomerID = 2
 
 drop table RepairCategoryJunction
 drop table Repair
+drop table RepairCategory
 drop table Customer
 drop table Device 
+drop table Employer
 drop table EmployerPosition
 
 
 
 --Для отобржения заказов--
-select OrderID, DateStart, Customer.CustomerID, DocNumber, CustomerFirstName, CustomerSecontName, CustomerPatronymic,
+select OrderID, DateStart, Customer.CustomerID, DocNumber, CustomerFirstName, CustomerSecondName, CustomerPatronymic,
 Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName,
 PlainDateEnd, Status, Discount, TotalCost, Comment from Repair
 join Employer on Employer.EmployerID = Repair.EmployerID
@@ -147,7 +149,7 @@ join Device on Device.DeviceID = Repair.DeviceID
 
 --Для отобржения заказов (Формат фамилия/имя)  --
 SELECT OrderID, DateStart,
-CONCAT(CustomerSecontName, ' ', LEFT(CustomerFirstName, 1) + '.',
+CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.',
        CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS CustomerShortFullName,
 Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName,
 CONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS EmShortFullName,
