@@ -8,7 +8,7 @@ namespace Spectr.Model
         private int _customerID;
         private string _docNumber;
         private string _customerFirstName;
-        private string _customerSecontName;
+        private string _customerSecondName;
         private string _customerPatronymic;
         private string _phoneNumber;
         private string _emailAdress;
@@ -42,13 +42,13 @@ namespace Spectr.Model
                 _customerFirstName = value;
             }
         }
-        public string CustomerSecontName
+        public string CustomerSecondName
         {
-            get => _customerSecontName;
+            get => _customerSecondName;
             set
             {
-                if (value == _customerSecontName) return;
-                _customerSecontName = value;
+                if (value == _customerSecondName) return;
+                _customerSecondName = value;
             }
         }
         public string CustomerPatronymic

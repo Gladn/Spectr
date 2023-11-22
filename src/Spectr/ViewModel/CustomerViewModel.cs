@@ -66,7 +66,7 @@ namespace Spectr.ViewModel
 
         private string _insertDocNumber;
         private string _insertCustomerFirstName;
-        private string _insertCustomerSecontName;
+        private string _insertCustomerSecondName;
         private string _insertCustomerPatronymic;
         private string _insertPhoneNumber;
         private string _insertEmailAdress;
@@ -95,15 +95,15 @@ namespace Spectr.ViewModel
             }
         }
 
-        public string InsertCustomerSecontName
+        public string InsertCustomerSecondName
         {
-            get => _insertCustomerSecontName;
+            get => _insertCustomerSecondName;
             set
             {
-                if (value == _insertCustomerSecontName) return;
-                _insertCustomerSecontName = value;
-                ValidateProperty(value, "InsertCustomerSecontName");
-                OnPropertyChanged(nameof(InsertCustomerSecontName));
+                if (value == _insertCustomerSecondName) return;
+                _insertCustomerSecondName = value;
+                ValidateProperty(value, "InsertCustomerSecondName");
+                OnPropertyChanged(nameof(InsertCustomerSecondName));
             }
         }
 
@@ -170,7 +170,7 @@ namespace Spectr.ViewModel
                                 CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
                                 DocNumber = reader.GetString(reader.GetOrdinal("DocNumber")),
                                 CustomerFirstName = reader.GetString(reader.GetOrdinal("CustomerFirstName")),
-                                CustomerSecontName = reader.GetString(reader.GetOrdinal("CustomerSecontName")),
+                                CustomerSecondName = reader.GetString(reader.GetOrdinal("CustomerSecondName")),
                                 CustomerPatronymic = reader.IsDBNull(reader.GetOrdinal("CustomerPatronymic")) ? null : reader.GetString(reader.GetOrdinal("CustomerPatronymic")),
                                 PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
                                 EmailAdress = reader.IsDBNull(reader.GetOrdinal("EmailAdress")) ? null : reader.GetString(reader.GetOrdinal("EmailAdress")),
@@ -197,7 +197,7 @@ namespace Spectr.ViewModel
         {
             if (string.IsNullOrEmpty(InsertDocNumber) ||
                 string.IsNullOrEmpty(InsertCustomerFirstName) ||
-                string.IsNullOrEmpty(InsertCustomerSecontName) ||
+                string.IsNullOrEmpty(InsertCustomerSecondName) ||
                 string.IsNullOrEmpty(InsertPhoneNumber))
             {
                 return false;
@@ -216,7 +216,7 @@ namespace Spectr.ViewModel
             {
                 DocNumber = InsertDocNumber,
                 CustomerFirstName = InsertCustomerFirstName,
-                CustomerSecontName = InsertCustomerSecontName,
+                CustomerSecondName = InsertCustomerSecondName,
                 CustomerPatronymic = InsertCustomerPatronymic,
                 PhoneNumber = InsertPhoneNumber,
                 EmailAdress = InsertEmailAdress
@@ -227,7 +227,7 @@ namespace Spectr.ViewModel
 
             InsertDocNumber = "";
             InsertCustomerFirstName = "";
-            InsertCustomerSecontName = "";
+            InsertCustomerSecondName = "";
             InsertCustomerPatronymic = "";
             InsertPhoneNumber = "";
             InsertEmailAdress = "";
@@ -244,11 +244,11 @@ namespace Spectr.ViewModel
                     await con.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand("INSERT INTO Customer " +
-                                                               "VALUES (@DocNumber, @CustomerFirstName, @CustomerSecontName, @CustomerPatronymic, @PhoneNumber, @EmailAdress)", con))
+                                                               "VALUES (@DocNumber, @CustomerFirstName, @CustomerSecondName, @CustomerPatronymic, @PhoneNumber, @EmailAdress)", con))
                     {
                         command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
                         command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
-                        command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
+                        command.Parameters.AddWithValue("@CustomerSecondName", customer.CustomerSecondName);
                         command.Parameters.AddWithValue("@CustomerPatronymic", string.IsNullOrEmpty(customer.CustomerPatronymic) ? (object)DBNull.Value : customer.CustomerPatronymic);
                         command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
                         command.Parameters.AddWithValue("@EmailAdress", string.IsNullOrEmpty(customer.EmailAdress) ? (object)DBNull.Value : customer.EmailAdress);
@@ -335,14 +335,14 @@ namespace Spectr.ViewModel
 
                     using (SqlCommand command = new SqlCommand("UPDATE Customer " +
                                                                "SET DocNumber=@DocNumber, CustomerFirstName=@CustomerFirstName, " +
-                                                               "CustomerSecontName=@CustomerSecontName, CustomerPatronymic=@CustomerPatronymic, " +
+                                                               "CustomerSecondName=@CustomerSecondName, CustomerPatronymic=@CustomerPatronymic, " +
                                                                "PhoneNumber=@PhoneNumber, EmailAdress=@EmailAdress " +
                                                                "WHERE CustomerID=@CustomerID", con))
                     {
                         command.Parameters.AddWithValue("@CustomerID", customer.CustomerID);
                         command.Parameters.AddWithValue("@DocNumber", customer.DocNumber);
                         command.Parameters.AddWithValue("@CustomerFirstName", customer.CustomerFirstName);
-                        command.Parameters.AddWithValue("@CustomerSecontName", customer.CustomerSecontName);
+                        command.Parameters.AddWithValue("@CustomerSecondName", customer.CustomerSecondName);
                         command.Parameters.AddWithValue("@CustomerPatronymic", customer.CustomerPatronymic);
                         command.Parameters.AddWithValue("@PhoneNumber", customer.PhoneNumber);
                         command.Parameters.AddWithValue("@EmailAdress", customer.EmailAdress);

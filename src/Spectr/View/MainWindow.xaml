@@ -135,7 +135,7 @@
                                 <DataGridTextColumn Header="ID" Binding="{Binding CustomerID}" Width="50"/>
                                 <DataGridTextColumn Header="Паспорт" Binding="{Binding DocNumber}" Width="120"/>
                                 <DataGridTextColumn Header="Имя" Binding="{Binding CustomerFirstName}"/>
-                                <DataGridTextColumn Header="Фамилия" Binding="{Binding CustomerSecontName}"/>
+                                <DataGridTextColumn Header="Фамилия" Binding="{Binding CustomerSecondName}"/>
                                 <DataGridTextColumn Header="Отчество" Binding="{Binding CustomerPatronymic}" />
                                 <DataGridTextColumn Header="Телефон" Binding="{Binding PhoneNumber}"/>
                                 <DataGridTextColumn Header="Email" Binding="{Binding EmailAdress}"/>
@@ -193,7 +193,7 @@
                                         
                                         <TextBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080" DataContext="{StaticResource CustomerViewModel}">
                                             <TextBox.Text>
-                                                <Binding Path="InsertCustomerSecontName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                                <Binding Path="InsertCustomerSecondName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
                                                         <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
                                                     </Binding.ValidationRules>
@@ -260,7 +260,7 @@
                                         <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Имя"/><Run Text=":"/></TextBlock>
                                         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerFirstName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Фамилия"/><Run Text=":"/></TextBlock>
-                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerSecontName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerSecondName, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="3" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Отчество"/><Run Text=":"/></TextBlock>
                                         <TextBox Grid.Row="3" Grid.Column="1" Margin="5" DataContext="{StaticResource CustomerViewModel}" Text="{Binding UpdateSelectedCustomer.CustomerPatronymic, UpdateSourceTrigger=PropertyChanged}" BorderBrush="#000080"/>
                                         <TextBlock Grid.Row="4" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Номер"/><Run Text=":"/></TextBlock>

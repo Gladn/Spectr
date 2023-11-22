@@ -66,7 +66,7 @@ namespace Spectr.ViewModel
                     await con.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand("SELECT OrderID, DateStart, Customer.CustomerID, Customer.DocNumber, " +
-                        "CONCAT(CustomerSecontName, ' ', LEFT(CustomerFirstName, 1) + '.', " +
+                        "CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.', " +
                         "CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS CustomerShortFullName, " +
                         "Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName, " +
                         "CONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS EmShortFullName, " +
