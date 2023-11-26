@@ -96,8 +96,15 @@
     <Compile Include="Commands\CloseAppCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\LambdaCommand.cs" />
+    <Compile Include="Migrations\202311262127310_YourMigrationName.cs" />
+    <Compile Include="Migrations\202311262127310_YourMigrationName.designer.cs">
+      <DependentUpon>202311262127310_YourMigrationName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\DataContext\AppContext.cs" />
+    <Compile Include="Model\DataContext\DeviceConfiguration.cs" />
     <Compile Include="Model\Device.cs" />
     <Compile Include="Model\Employer.cs" />
     <Compile Include="Model\RepairOrder.cs" />
@@ -134,20 +141,25 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\202311262127310_YourMigrationName.resx">
+      <DependentUpon>202311262127310_YourMigrationName.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Settings\packages.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Settings\App.config" />
+    <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Settings\" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
       <Visible>False</Visible>

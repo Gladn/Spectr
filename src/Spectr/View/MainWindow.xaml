@@ -285,19 +285,7 @@
                 <!-- Вкладка Устройства -->
                 <TabItem Uid="1" Header="Устройства" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
                     <DockPanel>
-                        <DataGrid x:Name="DeviceDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="800" Margin="0 5"
-                                  DataContext="{StaticResource DeviceViewModel}" ItemsSource="{Binding Devices}" IsReadOnly="True" SelectionUnit="FullRow" 
-                                        SelectionMode="Single" CanUserAddRows="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding DeviceID}" Width="50"/>
-                                <DataGridTextColumn Header="Серийный номер" Binding="{Binding SerialNumber}" Width="155"/>
-                                <DataGridTextColumn Header="Тип" Binding="{Binding Type}"/>
-                                <DataGridTextColumn Header="Производитель" Binding="{Binding Company}"/>
-                                <DataGridTextColumn Header="Модель" Binding="{Binding Model}" />
-                                <DataGridTextColumn Header="Год производства" Binding="{Binding ManufactureYear}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-
+                        <DataGrid DataContext="{StaticResource DeviceViewModel}" ItemsSource="{Binding Device}" AutoGenerateColumns="True" />
                     </DockPanel>
                 </TabItem>
                 

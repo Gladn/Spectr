@@ -1,70 +1,44 @@
 ﻿using Spectr.Model;
+using Spectr.Model.DataContext;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Spectr.ViewModel
 {
     internal class DeviceViewModel : ViewModelBase
     {
-        private ObservableCollection<Device> _devices;
+        private ObservableCollection<Device> _device;
 
-        public ObservableCollection<Device> Devices
+        public ObservableCollection<Device> Device
         {
-            get { return _devices; }
+            get { return _device; }
             set
             {
-                if (_devices != value)
+                if (_device != value)
                 {
-                    _devices = value;
-                    OnPropertyChanged(nameof(Devices));
+                    _device = value;
+                    OnPropertyChanged(nameof(Device));
                 }
             }
         }
 
-
-        #region Отборажение данных
-        private async Task LoadDataAsync()
+        private void LoadData()
         {
-            Devices = await LoadDataFromDatabaseAsync();
-        }
-
-        private async Task<ObservableCollection<Device>> LoadDataFromDatabaseAsync()
-        {
-            ObservableCollection<Device> devices = new ObservableCollection<Device>();
-
-            using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+            using (var context = new AppContext())
             {
-                await con.OpenAsync();
-
-                using (SqlCommand command = new SqlCommand("SELECT * FROM Device", con))
-                using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        Device device = new Device
-                        {
-                            DeviceID = reader.GetInt32(reader.GetOrdinal("DeviceID")),
-                            SerialNumber = reader.GetString(reader.GetOrdinal("SerialNumber")),
-                            Type = reader.GetString(reader.GetOrdinal("Type")),
-                            Company = reader.GetString(reader.GetOrdinal("Company")),
-                            Model = reader.GetString(reader.GetOrdinal("Model")),
-                            ManufactureYear = reader.GetInt32(reader.GetOrdinal("ManufactureYear"))
-                        };
-                        devices.Add(device);
-                    }
-                }
+                Device = new ObservableCollection<Device>(context.Device.ToList());
             }
-            return devices;
         }
 
-        #endregion
+
+
 
         public DeviceViewModel()
         {
-            Devices = new ObservableCollection<Device>();
-            
-            LoadDataAsync();
+
+           LoadData();
         }
     }
 }
