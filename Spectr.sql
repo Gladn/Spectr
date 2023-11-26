@@ -134,7 +134,7 @@ drop table RepairCategory
 drop table Customer
 drop table Device 
 drop table Employer
-drop table EmployerPosition
+drop table EmployerPosition;
 
 
 
@@ -157,5 +157,42 @@ PlainDateEnd, Status, Discount, TotalCost, Comment
 FROM Repair
 JOIN Employer ON Employer.EmployerID = Repair.EmployerID
 JOIN Customer ON Customer.CustomerID = Repair.CustomerID
+JOIN Device ON Device.DeviceID = Repair.DeviceID;
+
+
+--Для отобржения заказов (Короткий формат всех дат и ФИО)  --
+SELECT Repair.OrderID as 'ID',CONVERT(VARCHAR, DateStart, 103) AS 'Дата заказа',
+CONVERT(VARCHAR, PlainDateEnd, 103) AS 'Дата окончания', TotalCost as 'Цена',
+CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.',
+CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS 'Заказчик',
+SerialNumber as 'Номер устройства',
+CONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS 'Работник',
+STRING_AGG(RepairCategory.Category, ', ') AS 'Категории', Comment as 'Комментарий' 
+FROM Repair
+JOIN Employer ON Employer.EmployerID = Repair.EmployerID
+JOIN Customer ON Customer.CustomerID = Repair.CustomerID
 JOIN Device ON Device.DeviceID = Repair.DeviceID
+LEFT JOIN RepairCategoryJunction ON RepairCategoryJunction.OrderID = Repair.OrderID
+LEFT JOIN RepairCategory ON RepairCategoryJunction.CategoryID = RepairCategory.CategoryID
+GROUP BY Repair.OrderID, DateStart, PlainDateEnd, TotalCost,
+Customer.CustomerSecondName, Customer.CustomerFirstName, Customer.CustomerPatronymic,
+SerialNumber, EmFirstName, EmSecondName, Comment;
+
+-- Простой триггер ограничения массовой вставки --
+CREATE TRIGGER PreventBulkInsertRepairOrder
+ON Repair
+AFTER INSERT
+AS
+BEGIN
+    DECLARE @RowCount INT
+    SELECT @RowCount = COUNT(*) FROM inserted
+
+    IF @RowCount > 3
+    BEGIN
+		ROLLBACK TRAN
+        PRINT ('Ошибка Insert')
+    END
+END
+
+
 
