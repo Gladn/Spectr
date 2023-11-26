@@ -233,7 +233,8 @@
 
                                         <Button  Grid.Row="6" Grid.Column="0" Content="Добавить" FontSize="16" Cursor="Hand" Margin="10" 
                                                  DataContext="{StaticResource CustomerViewModel}" Command="{Binding AddCustomerCommand}"  IsEnabled="{Binding IsAddButtonEnabled}"/>
-                                        <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"/>
+                                        <Button  Grid.Row="6" Grid.Column="1" Content="Отмена" FontSize="16" Cursor="Hand" Margin="10"
+                                                 DataContext="{StaticResource CustomerViewModel}" Command="{Binding ClearCommand}"/>
                                     </Grid>
                                 </Expander>
                                 <!-- Колонка с update -->
@@ -361,15 +362,15 @@
                                         <TextBlock Grid.Row="7" Grid.Column="0" Margin="10, 10, 0, 0"><Run Text="Комментарий"/><Run Text=":"/></TextBlock>
 
                                         <DatePicker Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" 
-                                                    DataContext="{StaticResource CustomerViewModel}" 
-                                                    SelectedDate="{Binding InsertDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                    DataContext="{StaticResource OrderViewModel}" 
+                                                    SelectedDate="{Binding InsertDateStart, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                     DisplayDateStart="{Binding MinimumAllowedDate}" 
                                                     DisplayDateEnd="{Binding MaximumAllowedDate}">
                                         </DatePicker>
 
                                         <DatePicker Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" 
-                                                    DataContext="{StaticResource CustomerViewModel}" 
-                                                    SelectedDate="{Binding InsertDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                    DataContext="{StaticResource OrderViewModel}" 
+                                                    SelectedDate="{Binding InsertDateEnd, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                     DisplayDateStart="{Binding MinimumAllowedDate}" 
                                                     DisplayDateEnd="{Binding MaximumAllowedDate}">
                                         </DatePicker>
@@ -388,8 +389,13 @@
                                         <TextBox Grid.Row="5" Grid.Column="1" Margin="5" BorderBrush="#000080"
                                                  >
                                         </TextBox>
-                                        <ComboBox Grid.Row="6" Grid.Column="1" Margin="5" BorderBrush="#000080">
+                                        <ComboBox Grid.Row="6" Grid.Column="1" Margin="5" BorderBrush="#000080"
+                                                  DataContext="{StaticResource OrderViewModel}" 
+                                                  ItemsSource="{Binding Employers}" 
+                                                  DisplayMemberPath="EmSecondName" 
+                                                  SelectedItem="{Binding SelectedEmployer, Mode=TwoWay}">
                                         </ComboBox>
+                                        
                                         <TextBox Grid.Row="7" Grid.Column="1" Margin="5" BorderBrush="#000080"
                                                  >
                                         </TextBox>

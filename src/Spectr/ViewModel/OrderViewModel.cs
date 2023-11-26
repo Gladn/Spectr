@@ -15,6 +15,8 @@ namespace Spectr.ViewModel
         private ObservableCollection<RepairOrder> _orders;
         private RepairOrder _insertSelectedOrder;
 
+        private ObservableCollection<Employer> _employers;
+
         public ObservableCollection<RepairOrder> Orders
         {
             get { return _orders; }
@@ -45,8 +47,32 @@ namespace Spectr.ViewModel
             }
         }
 
+        public ObservableCollection<Employer> Employers
+        {
+            get { return _employers; }
+            set
+            {
+                if (_employers != value)
+                {
+                    _employers = value;
+                    OnPropertyChanged(nameof(Employers));
+                }
+            }
+        }
 
-
+        private Employer _selectedEmployer;
+        public Employer SelectedEmployer
+        {
+            get { return _selectedEmployer; }
+            set
+            {
+                if (_selectedEmployer != value)
+                {
+                    _selectedEmployer = value;
+                    OnPropertyChanged(nameof(SelectedEmployer));
+                }
+            }
+        }
 
 
         #region Отборажение данных
@@ -125,7 +151,58 @@ namespace Spectr.ViewModel
             return orders;
         }
 
+        private async Task EmLoadDataAsync()
+        {
+            Employers = await EmLoadDataFromDatabaseAsync();
+            OnPropertyChanged(nameof(Employers));
+        }
+
+        private async Task<ObservableCollection<Employer>> EmLoadDataFromDatabaseAsync()
+        {
+            ObservableCollection<Employer> employers = new ObservableCollection<Employer>();
+
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+                {
+                    await con.OpenAsync();
+
+                    using (SqlCommand command = new SqlCommand("SELECT * FROM Employer", con))
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            Employer employer = new Employer
+                            {
+                                EmployerID = reader.GetInt32(reader.GetOrdinal("EmployerID")),
+                                EmFirstName = reader.GetString(reader.GetOrdinal("EmFirstName")),
+                                EmSecondName = reader.GetString(reader.GetOrdinal("EmSecondName")),
+                                PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                                Salary = reader.GetDecimal(reader.GetOrdinal("Salary")),
+                                PositionID = reader.GetInt32(reader.GetOrdinal("PositionID")),
+
+
+                            };
+                            employers.Add(employer);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка отображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            return employers;
+        }
         #endregion
+
+
+
+
+
+
+
 
 
 
@@ -134,7 +211,7 @@ namespace Spectr.ViewModel
             Orders = new ObservableCollection<RepairOrder>();
 
             Task task = LoadDataAsync();
-
+            EmLoadDataAsync();
 
         }
     }

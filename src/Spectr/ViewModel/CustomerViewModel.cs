@@ -315,7 +315,7 @@ namespace Spectr.ViewModel
             return true;
         }
 
-        private async void OnUpdateCustomerExecutedAsync(object parameter)
+        private async void OnUpdateCustomerExecuted(object parameter)
         {
             if (UpdateSelectedCustomer != null)
             {
@@ -468,6 +468,26 @@ namespace Spectr.ViewModel
 
         #endregion
 
+        #region Визуалка
+
+        public ICommand ClearCommand { get; }
+        
+        private bool CanClearCommandExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void OnClearCommandExecuted(object parameter)
+        {
+            InsertDocNumber = "";
+            InsertCustomerFirstName = "";
+            InsertCustomerSecondName = "";
+            InsertCustomerPatronymic = "";
+            InsertPhoneNumber = "";
+            InsertEmailAdress = "";
+        }
+
+        #endregion
 
         public CustomerViewModel()
         {
@@ -479,8 +499,9 @@ namespace Spectr.ViewModel
 
             DeleteCustomerCommand = new LambdaCommand(OnDeleteCustomerExecuted, CanDeleteCustomerCommandExecute);
 
-            UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecutedAsync, CanUpdateCustomerCommandExecute);
+            UpdateCustomerCommand = new LambdaCommand(OnUpdateCustomerExecuted, CanUpdateCustomerCommandExecute);
 
+            ClearCommand = new LambdaCommand(OnClearCommandExecuted, CanClearCommandExecute);
         }
     }
 }
