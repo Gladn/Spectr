@@ -23,7 +23,5 @@ namespace Spectr.Model
 
         public List<RepairCategoryJunction> Categories { get; set; }
 
-        public string CustomerShortFullName { get; set; }
-        public string EmShortFullName { get; set; }
     }
 }

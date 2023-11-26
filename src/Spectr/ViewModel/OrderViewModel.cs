@@ -2,7 +2,9 @@
 using Spectr.Model;
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
@@ -75,15 +77,27 @@ namespace Spectr.ViewModel
         }
 
 
-        #region Отборажение данных
-        private async Task LoadDataAsync()
+
+
+        #region Отборажение данных        
+        private DataTable _repairOrderDataTable;
+        public DataTable RepairOrderDataTable
         {
-            Orders = await LoadDataFromDatabaseAsync();
+            get { return _repairOrderDataTable; }
+            set
+            {
+                _repairOrderDataTable = value;
+                OnPropertyChanged(nameof(RepairOrderDataTable));
+            }
         }
 
-        private async Task<ObservableCollection<RepairOrder>> LoadDataFromDatabaseAsync()
+        public async void LoadDataRepairOrder()
         {
-            ObservableCollection<RepairOrder> orders = new ObservableCollection<RepairOrder>();
+            RepairOrderDataTable = await LoadDataTableFromDatabaseAsync();
+        }
+        public async Task<DataTable> LoadDataTableFromDatabaseAsync()
+        {
+            DataTable dataTable = new DataTable();
 
             try
             {
@@ -91,55 +105,20 @@ namespace Spectr.ViewModel
                 {
                     await con.OpenAsync();
 
-                    using (SqlCommand command = new SqlCommand("SELECT OrderID, DateStart, Customer.CustomerID, Customer.DocNumber, " +
-                        "CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.', " +
-                        "CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS CustomerShortFullName, " +
-                        "Device.DeviceID, SerialNumber, Device.Model, Employer.EmployerID, EmFirstName, EmSecondName, " +
-                        "CONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS EmShortFullName, " +
-                        "PlainDateEnd, Status, Discount, TotalCost, Comment " +
-                        "FROM Repair " +
-                        "JOIN Employer ON Employer.EmployerID = Repair.EmployerID " +
-                        "JOIN Customer ON Customer.CustomerID = Repair.CustomerID " +
-                        "JOIN Device ON Device.DeviceID = Repair.DeviceID ", con))
-             
+                    using (SqlCommand command = new SqlCommand("SELECT Repair.OrderID as 'ID',CONVERT(VARCHAR, DateStart, 103) AS 'Дата заказа',\r\n " +
+                        "CONVERT(VARCHAR, PlainDateEnd, 103) AS 'Дата окончания', TotalCost as 'Цена',\r\n" +
+                        "CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.',\r\n" +
+                        "CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS 'Заказчик',\r\n" +
+                        "SerialNumber as 'Номер устройства',\r\nCONCAT(EmSecondName, ' ', LEFT(EmFirstName, 1) + '.') AS 'Работник',\r\n" +
+                        "STRING_AGG(RepairCategory.Category, ', ') AS 'Категории', Comment as 'Комментарий'\r\nFROM Repair\r\n" +
+                        "JOIN Employer ON Employer.EmployerID = Repair.EmployerID\r\nJOIN Customer ON Customer.CustomerID = Repair.CustomerID\r\n" +
+                        "JOIN Device ON Device.DeviceID = Repair.DeviceID\r\nLEFT JOIN RepairCategoryJunction ON RepairCategoryJunction.OrderID = Repair.OrderID\r\n" +
+                        "LEFT JOIN RepairCategory ON RepairCategoryJunction.CategoryID = RepairCategory.CategoryID\r\nGROUP BY Repair.OrderID, DateStart, PlainDateEnd, TotalCost,\r\n" +
+                        "Customer.CustomerSecondName, Customer.CustomerFirstName, Customer.CustomerPatronymic,\r\nSerialNumber, EmFirstName, EmSecondName, Comment", con))
+
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        while (await reader.ReadAsync())
-                        {
-                            RepairOrder order = new RepairOrder
-                            {
-                                OrderID = reader.GetInt32(reader.GetOrdinal("OrderID")),
-                                DateStart = reader.GetDateTime(reader.GetOrdinal("DateStart")),
-                                CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
-                                DeviceID = reader.GetInt32(reader.GetOrdinal("DeviceID")),
-                                EmployerID = reader.GetInt32(reader.GetOrdinal("EmployerID")),
-                                PlainDateEnd = reader.GetDateTime(reader.GetOrdinal("PlainDateEnd")),
-                                Status = reader.GetBoolean(reader.GetOrdinal("Status")),
-                                Discount = reader.IsDBNull(reader.GetOrdinal("Discount")) ? null : (decimal?)reader.GetDecimal(reader.GetOrdinal("Discount")),
-                                TotalCost = reader.GetDecimal(reader.GetOrdinal("TotalCost")),
-                                Comment = reader.IsDBNull(reader.GetOrdinal("Comment")) ? null : reader.GetString(reader.GetOrdinal("Comment")),
-                                CustomerShortFullName = reader.GetString(reader.GetOrdinal("CustomerShortFullName")),
-                                EmShortFullName = reader.GetString(reader.GetOrdinal("EmShortFullName"))
-                            };
-                            order.Customer = new Customer
-                            {
-                                CustomerID = reader.GetInt32(reader.GetOrdinal("CustomerID")),
-                                DocNumber = reader.GetString(reader.GetOrdinal("DocNumber"))                               
-                            };
-                            order.Device = new Device
-                            {
-                                DeviceID = reader.GetInt32(reader.GetOrdinal("DeviceID")),
-                                SerialNumber = reader.GetString(reader.GetOrdinal("SerialNumber")),
-                                Model = reader.GetString(reader.GetOrdinal("Model")),
-                            };
-                            order.Employer = new Employer
-                            {
-                                EmployerID = reader.GetInt32(reader.GetOrdinal("EmployerID")),
-                                EmFirstName = reader.GetString(reader.GetOrdinal("EmFirstName")),
-                                EmSecondName = reader.GetString(reader.GetOrdinal("EmSecondName")),
-                            };
-                            orders.Add(order);                    
-                        }
+                        dataTable.Load(reader);
                     }
                 }
             }
@@ -148,14 +127,18 @@ namespace Spectr.ViewModel
                 MessageBox.Show($"Ошибка отображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            return orders;
+            return dataTable;
         }
+
+
 
         private async Task EmLoadDataAsync()
         {
             Employers = await EmLoadDataFromDatabaseAsync();
             OnPropertyChanged(nameof(Employers));
         }
+
+
 
         private async Task<ObservableCollection<Employer>> EmLoadDataFromDatabaseAsync()
         {
@@ -202,6 +185,9 @@ namespace Spectr.ViewModel
 
 
 
+        
+
+        
 
 
 
@@ -210,9 +196,11 @@ namespace Spectr.ViewModel
         {
             Orders = new ObservableCollection<RepairOrder>();
 
-            Task task = LoadDataAsync();
-            EmLoadDataAsync();
 
+            _ = EmLoadDataAsync();
+
+  
+            LoadDataRepairOrder();
         }
     }
 }
