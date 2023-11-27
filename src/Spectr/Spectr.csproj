@@ -103,7 +103,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\Customer.cs" />
-    <Compile Include="Model\DataContext\AppContext.cs" />
+    <Compile Include="Model\DataContext\ApplicationContext.cs" />
     <Compile Include="Model\DataContext\DeviceConfiguration.cs" />
     <Compile Include="Model\Device.cs" />
     <Compile Include="Model\Employer.cs" />

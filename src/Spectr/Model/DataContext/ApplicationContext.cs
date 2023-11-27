@@ -4,12 +4,12 @@ using System.Data.Entity;
 namespace Spectr.Model.DataContext
 {
     [Table("Device")]
-    public class AppContext : DbContext
+    public class ApplicationContext : DbContext
     {
         
         public DbSet<Device> Device { get; set; }
 
-        public AppContext() : base(Properties.Settings.Default.con)
+        public ApplicationContext() : base(Properties.Settings.Default.con)
         {
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
