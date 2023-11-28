@@ -1,15 +1,10 @@
-﻿using Spectr.Model;
+﻿using Spectr.Commands;
+using Spectr.Model;
 using Spectr.Model.DataContext;
-using Spectr.Commands;
 using System.Collections.ObjectModel;
-using System.Data.SqlClient;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Windows.Input;
-using System.Windows;
-using System;
 using System.Data.Entity;
-using System.Runtime.Remoting.Contexts;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Spectr.ViewModel
 {
@@ -102,7 +97,7 @@ namespace Spectr.ViewModel
 
         private async void InitializeDataAsync()
         {
-            await LoadDeviceData();           
+            await LoadDeviceData();
         }
         private async Task LoadDeviceData()
         {
@@ -117,21 +112,21 @@ namespace Spectr.ViewModel
 
 
         #region Добавление устройства
-      
+
         public ICommand AddDeviceCommand { get; }
         private bool CanAddDeviceCommandExecute(object parameter)
         {
             if (string.IsNullOrEmpty(InsertSerialNumber) ||
                 string.IsNullOrEmpty(InsertType) ||
                 string.IsNullOrEmpty(InsertCompany) ||
-                string.IsNullOrEmpty(InsertModel))             
+                string.IsNullOrEmpty(InsertModel))
             {
                 return false;
             }
             return !HasErrors ? true : false;
         }
 
-        private async void OnAddDeviceExecuted(object parameter)
+        private async void OnAddDeviceCommandExecuted(object parameter)
         {
             Device newDevice = new Device
             {
@@ -166,7 +161,7 @@ namespace Spectr.ViewModel
         {
             return !HasErrors ? true : false;
         }
-        private async void OnDeleteDeviceExecuted(object parameter)
+        private async void OnDeleteDeviceCommandExecuted(object parameter)
         {
             using (var context = new ApplicationContext())
             {
@@ -184,14 +179,14 @@ namespace Spectr.ViewModel
 
 
         #region Редактирование устройства
-       
+
         public ICommand UpdateDeviceCommand { get; }
         private bool CanUpdateDeviceCommandExecute(object parameter)
-        {           
+        {
             return !HasErrors ? true : false;
         }
 
-        private async void OnUpdateDeviceExecuted(object parameter)
+        private async void OnUpdateDeviceCommandExecuted(object parameter)
         {
             if (SelectedDevice != null)
             {
@@ -206,20 +201,20 @@ namespace Spectr.ViewModel
                         existingDevice.Company = SelectedDevice.Company;
                         existingDevice.Model = SelectedDevice.Model;
                         existingDevice.ManufactureYear = SelectedDevice.ManufactureYear;
-                       
+
                         await context.SaveChangesAsync();
                     }
-                }                            
+                }
             }
-   
+
             InitializeDataAsync();
         }
 
         #endregion
-       
+
 
         #region Валидация устройств
-        
+
         private bool _hasErrors = false;
         public bool HasErrors
         {
@@ -241,11 +236,11 @@ namespace Spectr.ViewModel
             Device = new ObservableCollection<Device>();
             InitializeDataAsync();
 
-            AddDeviceCommand = new LambdaCommand(OnAddDeviceExecuted, CanAddDeviceCommandExecute);
+            AddDeviceCommand = new LambdaCommand(OnAddDeviceCommandExecuted, CanAddDeviceCommandExecute);
 
-            UpdateDeviceCommand = new LambdaCommand(OnUpdateDeviceExecuted, CanUpdateDeviceCommandExecute);
+            UpdateDeviceCommand = new LambdaCommand(OnUpdateDeviceCommandExecuted, CanUpdateDeviceCommandExecute);
 
-            DeleteDeviceCommand = new LambdaCommand(OnDeleteDeviceExecuted, CanDeleteDeviceCommandExecute);
+            DeleteDeviceCommand = new LambdaCommand(OnDeleteDeviceCommandExecuted, CanDeleteDeviceCommandExecute);
         }
     }
 }

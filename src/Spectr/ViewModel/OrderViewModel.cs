@@ -1,5 +1,7 @@
 ﻿using Spectr.Commands;
 using Spectr.Model;
+using Spectr.Model.DataContext;
+using Spectr.View;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -8,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Xml.Linq;
 
 namespace Spectr.ViewModel
@@ -180,14 +183,34 @@ namespace Spectr.ViewModel
         }
         #endregion
 
-
-
-
-
-
+        #region Добавление данных
         
+        // 1. Открыть окно с добалением
+        // 2. Добавить информацию в базу
+        public ICommand OpenAddOrderViewCommand { get; }
 
-        
+        private bool CanOpenAddOrderViewCommandExecute(object parameter)
+        {           
+            return true;
+        }
+
+        private void OnOpenAddOrderViewCommandExecuted(object parameter)
+        {
+            var window = new AddOrderView();
+            window.ShowDialog();
+        }
+        #endregion
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -198,9 +221,12 @@ namespace Spectr.ViewModel
 
 
             _ = EmLoadDataAsync();
-
-  
+ 
             LoadDataRepairOrder();
+
+            OpenAddOrderViewCommand = new LambdaCommand(OnOpenAddOrderViewCommandExecuted, CanOpenAddOrderViewCommandExecute);
+
+
         }
     }
 }
