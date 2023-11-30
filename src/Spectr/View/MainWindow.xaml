@@ -189,7 +189,7 @@
                                             <TextBox.Text>
                                                 <Binding Path="InsertDocNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged" ValidatesOnNotifyDataErrors="True" NotifyOnValidationError="True">
                                                     <Binding.ValidationRules>
-                                                        <validation:CustomerValidationRule MaxLength="15" NotNullable="True" MinLength="4"/>
+                                                        <validation:CustomerValidationRule MaxLength="15" MinLength="4"/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>
@@ -199,7 +199,7 @@
                                             <TextBox.Text>
                                                 <Binding Path="InsertCustomerFirstName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
-                                                        <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
+                                                        <validation:CustomerValidationRule MaxLength="20" MinLength="1"/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>
@@ -209,7 +209,7 @@
                                             <TextBox.Text>
                                                 <Binding Path="InsertCustomerSecondName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
-                                                        <validation:CustomerValidationRule MaxLength="20" NotNullable="True" MinLength="1"/>
+                                                        <validation:CustomerValidationRule MaxLength="20" MinLength="1"/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>
@@ -229,7 +229,7 @@
                                             <TextBox.Text>
                                                 <Binding Path="InsertPhoneNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
                                                     <Binding.ValidationRules>
-                                                        <validation:CustomerValidationRule MaxLength="10" NotNullable="True" MinLength="5"/>
+                                                        <validation:CustomerValidationRule MaxLength="10" MinLength="5"/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>

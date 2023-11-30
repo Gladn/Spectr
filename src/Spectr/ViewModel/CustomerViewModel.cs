@@ -102,8 +102,9 @@ namespace Spectr.ViewModel
             {
                 if (value == _insertCustomerSecondName) return;
                 _insertCustomerSecondName = value;
-                ValidateProperty(value, "InsertCustomerSecondName");
+               // ValidateProperty(value, "InsertCustomerSecondName");
                 OnPropertyChanged(nameof(InsertCustomerSecondName));
+                ValidateProperty(value, "InsertCustomerSecondName");
             }
         }
 
@@ -202,7 +203,7 @@ namespace Spectr.ViewModel
             {
                 return false;
             }
-            if (HasErrors)
+            else if (HasErrors)
             {
                 return false;
             }
@@ -434,6 +435,7 @@ namespace Spectr.ViewModel
                 {
                     AddError(propertyName, "Длинна не более 15 символов.");
                 }
+                else if (value == null || string.IsNullOrEmpty((string)value)) AddError(propertyName, "Длинна 0.");
                 else
                 {
                     RemoveError(propertyName);
