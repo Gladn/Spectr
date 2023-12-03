@@ -5,6 +5,7 @@ using Spectr.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Linq;
 
@@ -20,58 +22,53 @@ namespace Spectr.ViewModel
 {
     public class OrderViewModel : ViewModelBase
     {
-        private ObservableCollection<RepairOrder> _orders;
-        private RepairOrder _insertSelectedOrder;
+        //private ObservableCollection<RepairOrder> _orders;
+        //private RepairOrder _insertSelectedOrder;
 
-        private ObservableCollection<Employer> _employers;
+        //public ObservableCollection<RepairOrder> Orders
+        //{
+        //    get { return _orders; }
+        //    set
+        //    {
+        //        if (_orders != value)
+        //        {
+        //            _orders = value;
+        //            OnPropertyChanged(nameof(Orders));
+        //        }
+        //    }
+        //}
 
-        public ObservableCollection<RepairOrder> Orders
-        {
-            get { return _orders; }
-            set
-            {
-                if (_orders != value)
-                {
-                    _orders = value;
-                    OnPropertyChanged(nameof(Orders));
-                }
-            }
-        }
+        //public RepairOrder InsertSelectedOrder
+        //{
+        //    get
+        //    {
 
-        public RepairOrder InsertSelectedOrder
-        {
-            get
-            {
-
-                return _insertSelectedOrder;
-            }
-            set
-            {
-                if (value != _insertSelectedOrder)
-                {
-                    _insertSelectedOrder = value;
-                    OnPropertyChanged(nameof(InsertSelectedOrder));
-                }
-            }
-        }
+        //        return _insertSelectedOrder;
+        //    }
+        //    set
+        //    {
+        //        if (value != _insertSelectedOrder)
+        //        {
+        //            _insertSelectedOrder = value;
+        //            OnPropertyChanged(nameof(InsertSelectedOrder));
+        //        }
+        //    }
+        //}
 
         
-
-        private Employer _selectedEmployer;
-        public Employer SelectedEmployer
-        {
-            get { return _selectedEmployer; }
-            set
-            {
-                if (_selectedEmployer != value)
-                {
-                    _selectedEmployer = value;
-                    OnPropertyChanged(nameof(SelectedEmployer));
-                }
-            }
-        }
-
-
+        //private Employer _selectedEmployer;
+        //public Employer SelectedEmployer
+        //{
+        //    get { return _selectedEmployer; }
+        //    set
+        //    {
+        //        if (_selectedEmployer != value)
+        //        {
+        //            _selectedEmployer = value;
+        //            OnPropertyChanged(nameof(SelectedEmployer));
+        //        }
+        //    }
+        //}
 
 
         #region Отборажение данных    
@@ -155,6 +152,7 @@ namespace Spectr.ViewModel
             {
                 _customerDataTable = value;
                 OnPropertyChanged(nameof(CustomerDataTable));
+            
             }
         }
 
@@ -166,10 +164,25 @@ namespace Spectr.ViewModel
             {
                 _deviceDataTable = value;
                 OnPropertyChanged(nameof(DeviceDataTable));
+            
             }
         }
 
+        private ICollectionView _customerDataView;
+        public ICollectionView CustomerDataView
+        {
+            get { return _customerDataView; }
+            set
+            {
+                if (_customerDataView != value)
+                {
+                    _customerDataView = value;
+                    OnPropertyChanged(nameof(CustomerDataView));
+                }
+            }
+        }
 
+        
         private async Task LoadAllDataAsync()
         {
 
@@ -177,8 +190,7 @@ namespace Spectr.ViewModel
 
             
             EmployerDataTable = dataTablesLoaded[0];
-
-    
+   
             DataTable partialDataTable = dataTablesLoaded[0];
             foreach (DataColumn column in partialDataTable.Columns.Cast<DataColumn>().ToArray())
             {
@@ -189,6 +201,8 @@ namespace Spectr.ViewModel
             }
            
             EmployerDataTableComboBox = partialDataTable;
+
+            CustomerDataView = CollectionViewSource.GetDefaultView(dataTablesLoaded[1]);
 
             CustomerDataTable = dataTablesLoaded[1];
 
@@ -230,7 +244,7 @@ namespace Spectr.ViewModel
                         dataTables.Add(dataTable2);
                     }
 
-                    using (SqlCommand command = new SqlCommand("SELECT DeviceID as 'ID', SerialNumber as 'Серийный номер' FROM Device; ", con))
+                    using (SqlCommand command = new SqlCommand("SELECT DeviceID as 'ID', SerialNumber as 'Серийный_номер' FROM Device; ", con))
                     
                     using (SqlDataReader reader3 = await command.ExecuteReaderAsync())
                     {
@@ -248,9 +262,11 @@ namespace Spectr.ViewModel
 
             return dataTables;          
         }
-      
-        #endregion
 
+        
+
+        #endregion
+       
 
         #region Добавление данных
 
@@ -269,6 +285,117 @@ namespace Spectr.ViewModel
             window.ShowDialog();
         }
 
+        #region Фильтры вкладки добавления
+
+        private string _customerFilterText;
+        public string CustomerFilterText
+        {
+            get { return _customerFilterText; }
+            set
+            {
+                _customerFilterText = value;
+                OnPropertyChanged(nameof(CustomerFilterText));
+                ApplyFilterCustomer();
+            }
+        }
+
+        private void ApplyFilterCustomer()
+        {
+            if (CustomerDataTable != null)
+            {
+                CustomerDataTable.DefaultView.RowFilter = $"Клиент LIKE '%{CustomerFilterText}%' OR Документ LIKE '%{CustomerFilterText}%'";
+            }
+        }
+
+        private string _deviceFilterText;
+        public string DeviceFilterText
+        {
+            get { return _deviceFilterText; }
+            set
+            {
+                _deviceFilterText = value;
+                OnPropertyChanged(nameof(DeviceFilterText));
+                ApplyFilterDevice();
+            }
+        }
+
+        private void ApplyFilterDevice()
+        {
+            if (DeviceDataTable != null)
+            {
+                DeviceDataTable.DefaultView.RowFilter = $"Серийный_номер LIKE '%{DeviceFilterText}%'";
+            }
+        }
+
+        #endregion
+
+
+
+        
+
+        public ICommand AddOrderCommand { get; }
+
+        private bool CanAddOrderCommandExecute(object parameter)
+        {
+            return true;
+        }
+
+
+        private async void OnAddOrderCommandExecuted(object parameter)
+        {
+            //Customer newCustomer = new Customer
+            //{
+
+            //};
+
+            ////await AddCustomerAsync(newCustomer);
+            ////Customers.Add(newCustomer);
+
+            //InsertDocNumber = "";
+            //InsertCustomerFirstName = "";
+            //InsertCustomerSecondName = "";
+            //InsertCustomerPatronymic = "";
+            //InsertPhoneNumber = "";
+            //InsertEmailAdress = "";
+    
+
+
+        }
+
+        public async Task AddRepairOrderAsync(RepairOrder order)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+                {
+                    await con.OpenAsync();
+
+                    using (SqlCommand command = new SqlCommand("INSERT INTO Repair " +
+                                                               "VALUES (@DateStart, @DateEnd, @CustomerID, @DeviceID, @EmployerID, @PlainDateEnd, @Status, @Discount, @TotalCost, @Comment)", con))
+                    {
+                        command.Parameters.AddWithValue("@DateStart", order.DateStart);
+                        command.Parameters.AddWithValue("@PlainDateEnd", order.PlainDateEnd);
+                        command.Parameters.AddWithValue("@CustomerID", order.CustomerID);
+                        command.Parameters.AddWithValue("@DeviceID", order.DeviceID);
+                        command.Parameters.AddWithValue("@EmployerID", order.EmployerID);
+                        command.Parameters.AddWithValue("@Status", order.Status);
+                        command.Parameters.AddWithValue("@Discount", order.Discount.HasValue ? (object)order.Discount.Value : DBNull.Value);
+                        command.Parameters.AddWithValue("@TotalCost", order.TotalCost);
+                        command.Parameters.AddWithValue("@Comment", string.IsNullOrEmpty(order.Comment) ? (object)order.Comment : DBNull.Value;
+
+                        await command.ExecuteNonQueryAsync();
+                   
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка добавления: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
+
 
 
         #endregion
@@ -282,7 +409,7 @@ namespace Spectr.ViewModel
 
         public OrderViewModel()
         {
-            Orders = new ObservableCollection<RepairOrder>();            
+            //Orders = new ObservableCollection<RepairOrder>();            
 
             LoadDataRepairOrder();
 
@@ -290,9 +417,13 @@ namespace Spectr.ViewModel
 
             _ = LoadAllDataAsync();
 
+            AddOrderCommand = new LambdaCommand(OnAddOrderCommandExecuted, CanAddOrderCommandExecute);
 
+            
 
 
         }
+
+        
     }
 }
