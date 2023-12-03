@@ -17,45 +17,46 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 namespace Spectr.ViewModel
 {
     public class OrderViewModel : ViewModelBase
     {
-        //private ObservableCollection<RepairOrder> _orders;
-        //private RepairOrder _insertSelectedOrder;
+        private ObservableCollection<RepairOrder> _orders;
+        private RepairOrder _insertSelectedOrder;
 
-        //public ObservableCollection<RepairOrder> Orders
-        //{
-        //    get { return _orders; }
-        //    set
-        //    {
-        //        if (_orders != value)
-        //        {
-        //            _orders = value;
-        //            OnPropertyChanged(nameof(Orders));
-        //        }
-        //    }
-        //}
+        public ObservableCollection<RepairOrder> Orders
+        {
+            get { return _orders; }
+            set
+            {
+                if (_orders != value)
+                {
+                    _orders = value;
+                    OnPropertyChanged(nameof(Orders));
+                }
+            }
+        }
 
-        //public RepairOrder InsertSelectedOrder
-        //{
-        //    get
-        //    {
+        public RepairOrder InsertSelectedOrder
+        {
+            get
+            {
 
-        //        return _insertSelectedOrder;
-        //    }
-        //    set
-        //    {
-        //        if (value != _insertSelectedOrder)
-        //        {
-        //            _insertSelectedOrder = value;
-        //            OnPropertyChanged(nameof(InsertSelectedOrder));
-        //        }
-        //    }
-        //}
+                return _insertSelectedOrder;
+            }
+            set
+            {
+                if (value != _insertSelectedOrder)
+                {
+                    _insertSelectedOrder = value;
+                    OnPropertyChanged(nameof(InsertSelectedOrder));
+                }
+            }
+        }
 
-        
+
         //private Employer _selectedEmployer;
         //public Employer SelectedEmployer
         //{
@@ -72,7 +73,7 @@ namespace Spectr.ViewModel
 
 
         #region Отборажение данных    
-        
+
         private DataTable _repairOrderDataTable;
         public DataTable RepairOrderDataTable
         {
@@ -84,10 +85,11 @@ namespace Spectr.ViewModel
             }
         }
 
-        public async void LoadDataRepairOrder()
+        public async Task LoadDataRepairOrder()
         {
             RepairOrderDataTable = await LoadDataTableFromDatabaseAsync();
         }
+
         public async Task<DataTable> LoadDataTableFromDatabaseAsync()
         {
             DataTable dataTable = new DataTable();
@@ -263,15 +265,18 @@ namespace Spectr.ViewModel
             return dataTables;          
         }
 
-        
+
 
         #endregion
-       
+
 
         #region Добавление данных
 
         // 1. Открыть окно с добалением
         // 2. Добавить информацию в базу
+        // 3. Закрыть окно
+
+        private AddOrderView _addOrderView;
         public ICommand OpenAddOrderViewCommand { get; }
 
         private bool CanOpenAddOrderViewCommandExecute(object parameter)
@@ -281,9 +286,33 @@ namespace Spectr.ViewModel
 
         private void OnOpenAddOrderViewCommandExecuted(object parameter)
         {
-            var window = new AddOrderView();
-            window.ShowDialog();
+            _addOrderView = new AddOrderView();
+
+            _addOrderView.Show();
+
+            _addOrderView.Dispatcher.Invoke(_addOrderView.ShowDialog);
+            _addOrderView.DataContext = null;
+
+
         }
+
+
+        public ICommand CloseAddOrderViewCommand { get; }
+        private bool CanCloseAddOrderViewCommandExecute(object parameter)
+        {
+            return true;
+        }
+
+        private void OnCloseAddOrderViewCommandExecuted(object parameter)
+        {
+
+            if (_addOrderView != null)
+            {
+                _addOrderView.Close();
+                
+            }
+        }
+
 
         #region Фильтры вкладки добавления
 
@@ -331,7 +360,131 @@ namespace Spectr.ViewModel
 
 
 
-        
+        private DateTime _dateStart;
+        public DateTime DateStart
+        {
+            get { return _dateStart; }
+            set
+            {
+                if (_dateStart != value)
+                {
+                    _dateStart = value;
+                    OnPropertyChanged(nameof(DateStart));
+                }
+            }
+        }
+
+        private int _customerID;
+        public int CustomerID
+        {
+            get { return _customerID; }
+            set
+            {
+                if (_customerID != value)
+                {
+                    _customerID = value;
+                    OnPropertyChanged(nameof(CustomerID));
+                }
+            }
+        }
+
+        private int _deviceID;
+        public int DeviceID
+        {
+            get { return _deviceID; }
+            set
+            {
+                if (_deviceID != value)
+                {
+                    _deviceID = value;
+                    OnPropertyChanged(nameof(DeviceID));
+                }
+            }
+        }
+
+        private int _employerID;
+        public int EmployerID
+        {
+            get { return _employerID; }
+            set
+            {
+                if (_employerID != value)
+                {
+                    _employerID = value;
+                    OnPropertyChanged(nameof(EmployerID));
+                }
+            }
+        }
+
+        private DateTime _plainDateEnd;
+        public DateTime PlainDateEnd
+        {
+            get { return _plainDateEnd; }
+            set
+            {
+                if (_plainDateEnd != value)
+                {
+                    _plainDateEnd = value;
+                    OnPropertyChanged(nameof(PlainDateEnd));
+                }
+            }
+        }
+
+        private bool _status;
+        public bool Status
+        {
+            get { return _status; }
+            set
+            {
+                if (_status != value)
+                {
+                    _status = value;
+                    OnPropertyChanged(nameof(Status));
+                }
+            }
+        }
+
+        private decimal? _discount;
+        public decimal? Discount
+        {
+            get { return _discount; }
+            set
+            {
+                if (_discount != value)
+                {
+                    _discount = value;
+                    OnPropertyChanged(nameof(Discount));
+                }
+            }
+        }
+
+        private decimal _totalCost;
+        public decimal TotalCost
+        {
+            get { return _totalCost; }
+            set
+            {
+                if (_totalCost != value)
+                {
+                    _totalCost = value;
+                    OnPropertyChanged(nameof(TotalCost));
+                }
+            }
+        }
+
+        private string _comment;
+        public string Comment
+        {
+            get { return _comment; }
+            set
+            {
+                if (_comment != value)
+                {
+                    _comment = value;
+                    OnPropertyChanged(nameof(Comment));
+                }
+            }
+        }
 
         public ICommand AddOrderCommand { get; }
 
@@ -343,23 +496,28 @@ namespace Spectr.ViewModel
 
         private async void OnAddOrderCommandExecuted(object parameter)
         {
-            //Customer newCustomer = new Customer
-            //{
 
-            //};
+                RepairOrder newOrder = new RepairOrder
+                {
+                    DateStart = DateStart,
+                    PlainDateEnd = PlainDateEnd,
+                    EmployerID = EmployerID,
+                    CustomerID = CustomerID,
+                    DeviceID = DeviceID,
+                    Discount = Discount,
+                    TotalCost = TotalCost,
+                    Comment = Comment,
+                    Status = true,
+                    
+                };
 
-            ////await AddCustomerAsync(newCustomer);
-            ////Customers.Add(newCustomer);
-
-            //InsertDocNumber = "";
-            //InsertCustomerFirstName = "";
-            //InsertCustomerSecondName = "";
-            //InsertCustomerPatronymic = "";
-            //InsertPhoneNumber = "";
-            //InsertEmailAdress = "";
-    
+                await AddRepairOrderAsync(newOrder);
+                Orders.Add(newOrder);
 
 
+            
+            await LoadDataRepairOrder();
+            
         }
 
         public async Task AddRepairOrderAsync(RepairOrder order)
@@ -371,7 +529,7 @@ namespace Spectr.ViewModel
                     await con.OpenAsync();
 
                     using (SqlCommand command = new SqlCommand("INSERT INTO Repair " +
-                                                               "VALUES (@DateStart, @DateEnd, @CustomerID, @DeviceID, @EmployerID, @PlainDateEnd, @Status, @Discount, @TotalCost, @Comment)", con))
+                                                               "VALUES (@DateStart, @CustomerID, @DeviceID, @EmployerID, @PlainDateEnd, @Status, @Discount, @TotalCost, @Comment)", con))
                     {
                         command.Parameters.AddWithValue("@DateStart", order.DateStart);
                         command.Parameters.AddWithValue("@PlainDateEnd", order.PlainDateEnd);
@@ -381,10 +539,9 @@ namespace Spectr.ViewModel
                         command.Parameters.AddWithValue("@Status", order.Status);
                         command.Parameters.AddWithValue("@Discount", order.Discount.HasValue ? (object)order.Discount.Value : DBNull.Value);
                         command.Parameters.AddWithValue("@TotalCost", order.TotalCost);
-                        command.Parameters.AddWithValue("@Comment", string.IsNullOrEmpty(order.Comment) ? (object)order.Comment : DBNull.Value;
+                        command.Parameters.AddWithValue("@Comment", string.IsNullOrEmpty(order.Comment) ? (object)order.Comment : DBNull.Value);
 
-                        await command.ExecuteNonQueryAsync();
-                   
+                        await command.ExecuteNonQueryAsync();                  
                     }
                 }
             }
@@ -394,10 +551,8 @@ namespace Spectr.ViewModel
             }
         }
 
-
-
-
-
+       
+       
         #endregion
 
         /// <summary>
@@ -409,9 +564,9 @@ namespace Spectr.ViewModel
 
         public OrderViewModel()
         {
-            //Orders = new ObservableCollection<RepairOrder>();            
+            Orders = new ObservableCollection<RepairOrder>();            
 
-            LoadDataRepairOrder();
+            _ = LoadDataRepairOrder();
 
             OpenAddOrderViewCommand = new LambdaCommand(OnOpenAddOrderViewCommandExecuted, CanOpenAddOrderViewCommandExecute);
 
@@ -419,6 +574,7 @@ namespace Spectr.ViewModel
 
             AddOrderCommand = new LambdaCommand(OnAddOrderCommandExecuted, CanAddOrderCommandExecute);
 
+            CloseAddOrderViewCommand = new LambdaCommand(OnCloseAddOrderViewCommandExecuted, CanCloseAddOrderViewCommandExecute);
             
 
 

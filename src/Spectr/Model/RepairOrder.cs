@@ -17,11 +17,7 @@ namespace Spectr.Model
         public decimal TotalCost { get; set; }
         public string Comment { get; set; }
 
-        public Customer Customer { get; set; }
-        public Device Device { get; set; }
-        public Employer Employer { get; set; }
-
-        public List<RepairCategoryJunction> Categories { get; set; }
+        //public List<RepairCategoryJunction> Categories { get; set; }
 
     }
 }

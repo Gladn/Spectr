@@ -35,13 +35,13 @@
                 <TextBlock Grid.Row="0" Grid.Column="0" Margin="10, 5, 10, 5" FontSize="14" Foreground="Black"><Run Text="Время начала"/><Run Text=":"/></TextBlock>
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="10, 5, 10, 5" FontSize="14" Foreground="Black"><Run Text="Время окончания"/><Run Text=":"/></TextBlock>
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 5, 10, 5" FontSize="14" Foreground="Black"><Run Text="Мастер"/><Run Text=":"/></TextBlock>
-                <DatePicker Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" Text="{Binding Binddata, UpdateSourceTrigger=PropertyChanged}"/>
-                <DatePicker Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" Text="{Binding Binddata, UpdateSourceTrigger=PropertyChanged}" />
+                <DatePicker Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080" SelectedDate="{Binding DateStart, Mode=TwoWay}"/>
+                <DatePicker Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080" SelectedDate="{Binding PlainDateEnd, Mode=TwoWay}" />
                 <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080"
                           ItemsSource="{Binding EmployerDataTableComboBox.DefaultView}" 
                           DisplayMemberPath="Работник" 
                           SelectedValuePath="ID" 
-                          SelectedValue="{Binding SelectedValueProperty, UpdateSourceTrigger=PropertyChanged}" />
+                          SelectedValue="{Binding EmployerID, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Expander Grid.Row="3" Grid.ColumnSpan="2" Header="Выбор клиента:" Background="#FFCFCECE" Foreground="Black" FontSize="15" FontWeight="Medium">
                     <Grid>
@@ -70,9 +70,10 @@
                                   IsReadOnly="True" 
                                   SelectionUnit="FullRow"                                  
                                   ItemsSource="{Binding CustomerDataTable.DefaultView}"
-                                  SelectedItem="{Binding Selected}">
+                                  SelectedValue="{Binding CustomerID, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="ID">
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="Auto"/>
+                                <DataGridTextColumn Header="ID" Binding="{Binding ID}"  Width="Auto"/>
                                 <DataGridTextColumn Header="Документ" Binding="{Binding Документ}" Width="Auto"/>
                                 <DataGridTextColumn Header="ФИО Клиентов" Binding="{Binding Клиент}" Width="*"/>
                             </DataGrid.Columns>
@@ -83,7 +84,7 @@
                         Content="Добавить" FontSize="15" 
                         Cursor="Hand" Margin="10" 
                         VerticalAlignment="Bottom"
-                        Command="{Binding AddCommand}"/>
+                        Command="{Binding AddOrderCommand}"/>
             </Grid>
 
             <!-- Вторая -->
@@ -105,11 +106,11 @@
                 <TextBlock Grid.Row="2" Grid.Column="0" Margin="10, 5, 10, 5" FontSize="14" Foreground="Black"><Run Text="Комментарий"/><Run Text=":"/></TextBlock>
 
                 <TextBox Grid.Row="0" Grid.Column="1" Margin="5" BorderBrush="#000080"
-                         Text="{Binding Bind, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Discount, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Grid.Row="1" Grid.Column="1" Margin="5" BorderBrush="#000080"
-                         Text="{Binding Bind, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding TotalCost, UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBox Grid.Row="2" Grid.Column="1" Margin="5" BorderBrush="#000080"
-                         Text="{Binding Bind, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Comment, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <Expander Grid.Row="3" Grid.ColumnSpan="2" Header="Выбор устройства:" Background="#FFCFCECE"  Foreground="Black" FontSize="15" FontWeight="Medium">
                     <Grid>
@@ -137,7 +138,8 @@
                                   IsReadOnly="True" 
                                   SelectionUnit="FullRow"                                  
                                   ItemsSource="{Binding DeviceDataTable.DefaultView}"
-                                  SelectedItem="{Binding Selected}">
+                                  SelectedValue="{Binding DeviceID, UpdateSourceTrigger=PropertyChanged}"
+                                  SelectedValuePath="ID">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="ID" Binding="{Binding ID}" Width="Auto"/>
                                 <DataGridTextColumn Header="Серийный номер" Binding="{Binding Серийный_номер}" Width="*"/>
@@ -149,7 +151,10 @@
                         Content="Отмена" FontSize="15" 
                         Cursor="Hand" Margin="10" 
                         VerticalAlignment="Bottom"
-                        Command="{Binding ClearCommand}"/>
+                        Command="{Binding CloseAddOrderViewCommand}"
+                        CommandParameter="{Binding ElementName=AddOrderView, Mode=OneWay}"/>
+
+
             </Grid>
         </Grid>
     </DockPanel>
