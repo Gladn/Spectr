@@ -1,7 +1,4 @@
-﻿using Spectr.Commands;
-using System;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows;
 
 
 namespace Spectr
@@ -14,6 +11,6 @@ namespace Spectr
         public MainWindow()
         {
             InitializeComponent();
-        }     
+        }
     }
 }

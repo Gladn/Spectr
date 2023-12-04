@@ -1,23 +1,15 @@
 ﻿using Spectr.Commands;
 using Spectr.Model;
-using Spectr.Model.DataContext;
 using Spectr.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Xml.Linq;
-using System.Diagnostics;
 
 namespace Spectr.ViewModel
 {
@@ -248,7 +240,7 @@ namespace Spectr.ViewModel
             {
                 _customerDataTable = value;
                 OnPropertyChanged(nameof(CustomerDataTable));
-            
+
             }
         }
 
@@ -260,19 +252,19 @@ namespace Spectr.ViewModel
             {
                 _deviceDataTable = value;
                 OnPropertyChanged(nameof(DeviceDataTable));
-            
+
             }
         }
 
-               
+
         private async Task LoadAllDataAsync()
         {
 
             List<DataTable> dataTablesLoaded = await LoadDataFromDatabaseAsync();
 
-            
+
             EmployerDataTable = dataTablesLoaded[0];
-   
+
             DataTable partialDataTable = dataTablesLoaded[0];
             foreach (DataColumn column in partialDataTable.Columns.Cast<DataColumn>().ToArray())
             {
@@ -281,7 +273,7 @@ namespace Spectr.ViewModel
                     partialDataTable.Columns.Remove(column);
                 }
             }
-           
+
             EmployerDataTableComboBox = partialDataTable;
 
             CustomerDataTable = dataTablesLoaded[1];
@@ -306,17 +298,17 @@ namespace Spectr.ViewModel
                         "Employer.PositionID as 'ID', PositionName as 'Должность'" +
                         "FROM Employer " +
                         "Join EmployerPosition ON EmployerPosition.PositionID = Employer.PositionID", con))
-                    
+
                     using (SqlDataReader reader1 = await command.ExecuteReaderAsync())
                     {
                         DataTable dataTable1 = new DataTable();
                         dataTable1.Load(reader1);
                         dataTables.Add(dataTable1);
                     }
-                    
+
                     using (SqlCommand command = new SqlCommand("SELECT CustomerID as 'ID', DocNumber as 'Документ', CONCAT(CustomerSecondName, ' ', LEFT(CustomerFirstName, 1) + '.', " +
                         "CASE WHEN LEN(CustomerPatronymic) > 0 THEN CONCAT(' ', LEFT(CustomerPatronymic, 1), '.') ELSE '' END) AS 'Клиент' FROM Customer; ", con))
-                    
+
                     using (SqlDataReader reader2 = await command.ExecuteReaderAsync())
                     {
                         DataTable dataTable2 = new DataTable();
@@ -325,7 +317,7 @@ namespace Spectr.ViewModel
                     }
 
                     using (SqlCommand command = new SqlCommand("SELECT DeviceID as 'ID', SerialNumber as 'Серийный_номер' FROM Device; ", con))
-                    
+
                     using (SqlDataReader reader3 = await command.ExecuteReaderAsync())
                     {
                         DataTable dataTable3 = new DataTable();
@@ -340,7 +332,7 @@ namespace Spectr.ViewModel
                 MessageBox.Show($"Ошибка отображения: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            return dataTables;          
+            return dataTables;
         }
 
         #endregion
@@ -351,7 +343,7 @@ namespace Spectr.ViewModel
         // 1. Открыть окно с добалением
         // 2. Добавить информацию в базу
         // 3. Закрыть окно
-       
+
         public ICommand OpenAddOrderViewCommand { get; }
 
         private bool CanOpenAddOrderViewCommandExecute(object parameter) => true;
@@ -370,14 +362,14 @@ namespace Spectr.ViewModel
         }
 
         public ICommand CloseAddOrderViewCommand { get; }
-        private bool CanCloseAddOrderViewCommandExecute(object parameter) =>  true;
+        private bool CanCloseAddOrderViewCommandExecute(object parameter) => true;
         private void OnCloseAddOrderViewCommandExecuted(object parameter)
         {
             var addOrderView = Application.Current.Windows.OfType<Window>().SingleOrDefault(x => x.IsActive);
-            
+
             if (addOrderView != null)
             {
-                addOrderView.Close();               
+                addOrderView.Close();
             }
         }
 
@@ -426,7 +418,7 @@ namespace Spectr.ViewModel
 
         #endregion
 
-      
+
 
         public ICommand AddOrderCommand { get; }
 
@@ -438,31 +430,28 @@ namespace Spectr.ViewModel
         private async void OnAddOrderCommandExecutedAsync(object parameter)
         {
             RepairOrder newOrder = new RepairOrder
-                {
-                    DateStart = DateStart,
-                    PlainDateEnd = PlainDateEnd,
-                    EmployerID = EmployerID,
-                    CustomerID = CustomerID,
-                    DeviceID = DeviceID,
-                    Discount = Discount,
-                    TotalCost = TotalCost,
-                    Comment = Comment,
-                    Status = true,
-                    
-                };
+            {
+                DateStart = DateStart,
+                PlainDateEnd = PlainDateEnd,
+                EmployerID = EmployerID,
+                CustomerID = CustomerID,
+                DeviceID = DeviceID,
+                Discount = Discount,
+                TotalCost = TotalCost,
+                Comment = Comment,
+                Status = true,
+
+            };
 
             await AddRepairOrderAsync(newOrder);
             //Orders.Add(newOrder);
-          
 
 
             OnCloseAddOrderViewCommandExecuted(null);
-            
+
             await LoadDataRepairOrder();
-           
-            await Application.Current.Dispatcher.Invoke(async () => await LoadDataRepairOrder());
         }
-        
+
         public async Task AddRepairOrderAsync(RepairOrder order)
         {
             try
@@ -496,6 +485,7 @@ namespace Spectr.ViewModel
 
         #endregion
 
+
         #region Удаление заказа
         public ICommand DeleteOrderCommand { get; }
         private bool CanDeleteOrderCommandExecute(object parameter)
@@ -508,8 +498,8 @@ namespace Spectr.ViewModel
             if (parameter is DataRowView rowView && rowView["ID"] != null)
             {
                 int orderId = Convert.ToInt32(rowView["ID"]);
-                    await DeleteOrderAsync(orderId);
-                    await LoadDataRepairOrder();                             
+                await DeleteOrderAsync(orderId);
+                await LoadDataRepairOrder();
             }
             else
             {
@@ -532,7 +522,7 @@ namespace Spectr.ViewModel
                 }
 
                 //Orders.Remove(orderId);
-        
+
             }
             catch (Exception ex)
             {
@@ -565,37 +555,7 @@ namespace Spectr.ViewModel
 
             DeleteOrderCommand = new LambdaCommand(OnDeleteOrderCommandExecuted, CanDeleteOrderCommandExecute);
 
-        }
 
-        
-    }
-    public class EventAggregator
-    {
-        private readonly Dictionary<Type, List<object>> _subscribers = new Dictionary<Type, List<object>>();
-
-        public void Subscribe<T>(object subscriber, Action<T> callback)
-        {
-            var eventType = typeof(T);
-
-            if (!_subscribers.ContainsKey(eventType))
-            {
-                _subscribers[eventType] = new List<object>();
-            }
-
-            _subscribers[eventType].Add(subscriber);
-        }
-
-        public void Publish<T>(T message)
-        {
-            var eventType = typeof(T);
-
-            if (_subscribers.ContainsKey(eventType))
-            {
-                foreach (var subscriber in _subscribers[eventType])
-                {
-                    ((Action<T>)subscriber)(message);
-                }
-            }
         }
     }
 }
