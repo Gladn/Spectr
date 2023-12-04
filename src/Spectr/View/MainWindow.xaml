@@ -19,7 +19,7 @@
     <Window.Resources>
         <ResourceDictionary>
 
-            <!-- Вьюшки моделей -->
+            <!-- Логика предсталения моделей -->
             <vm:CustomerViewModel x:Key="CustomerViewModel" />
             <vm:DeviceViewModel x:Key="DeviceViewModel" />
             <vm:MainWindowViewModel x:Key="MainWindowViewModel" />
@@ -126,7 +126,7 @@
             </Grid.RowDefinitions>
             <TabControl>
 
-                <!-- 1. Вкладка Клиент -->
+                <!-- #region 1. Вкладка Клиент -->
                 <TabItem Uid="0" Header="Клиенты" Style="{StaticResource TabItemStyle1}" Cursor="Hand" >
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -293,11 +293,11 @@
                         </Border>
                     </Grid>
                 </TabItem>
+                <!-- #endregion -->
 
 
-
-
-                <!-- 2. Вкладка Устройства -->
+                
+                <!-- #region 2. Вкладка Устройства -->
                 <TabItem Uid="1" Header="Устройства" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -399,11 +399,11 @@
                         </Border>
                     </Grid>
                 </TabItem>
+                <!-- #endregion -->
 
 
 
-
-                <!-- 3. Вкладка Заказ -->
+                <!-- #region 3. Вкладка Заказ -->
                 <TabItem Uid="2" Header="Таблица заказов" Style="{StaticResource TabItemStyle1}" Cursor="Hand">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -435,8 +435,11 @@
                         </Border>
                     </Grid>
                 </TabItem>
-
-                <!-- -->
+                <!-- #endregion -->
+                
+                
+                
+                <!--  -->
                 <TabItem Uid="3" Header="Служебное" Style="{StaticResource TabItemStyle1}"></TabItem>
                 <TabItem Uid="4" Header="Отчет #1" Style="{StaticResource TabItemStyle1}"></TabItem>
                 <TabItem Uid="5" Header="Отчет #2" Style="{StaticResource TabItemStyle1}" Cursor="Hand"></TabItem>
