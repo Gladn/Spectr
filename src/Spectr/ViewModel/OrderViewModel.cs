@@ -24,7 +24,6 @@ namespace Spectr.ViewModel
     public class OrderViewModel : ViewModelBase
     {
         private ObservableCollection<RepairOrder> _orders;
-        private RepairOrder _insertSelectedOrder;
 
         public ObservableCollection<RepairOrder> Orders
         {
@@ -38,38 +37,6 @@ namespace Spectr.ViewModel
                 }
             }
         }
-
-        public RepairOrder InsertSelectedOrder
-        {
-            get
-            {
-
-                return _insertSelectedOrder;
-            }
-            set
-            {
-                if (value != _insertSelectedOrder)
-                {
-                    _insertSelectedOrder = value;
-                    OnPropertyChanged(nameof(InsertSelectedOrder));
-                }
-            }
-        }
-
-
-        //private Employer _selectedEmployer;
-        //public Employer SelectedEmployer
-        //{
-        //    get { return _selectedEmployer; }
-        //    set
-        //    {
-        //        if (_selectedEmployer != value)
-        //        {
-        //            _selectedEmployer = value;
-        //            OnPropertyChanged(nameof(SelectedEmployer));
-        //        }
-        //    }
-        //}
 
 
         #region Отборажение данных    
@@ -359,7 +326,7 @@ namespace Spectr.ViewModel
         #endregion
 
 
-
+        #region Поля Insert Value
         private DateTime _dateStart;
         public DateTime DateStart
         {
@@ -485,6 +452,7 @@ namespace Spectr.ViewModel
                 }
             }
         }
+        #endregion
 
         public ICommand AddOrderCommand { get; }
 
@@ -513,9 +481,8 @@ namespace Spectr.ViewModel
 
                 await AddRepairOrderAsync(newOrder);
                 Orders.Add(newOrder);
+           
 
-
-            
             await LoadDataRepairOrder();
             
         }
@@ -541,7 +508,7 @@ namespace Spectr.ViewModel
                         command.Parameters.AddWithValue("@TotalCost", order.TotalCost);
                         command.Parameters.AddWithValue("@Comment", string.IsNullOrEmpty(order.Comment) ? (object)order.Comment : DBNull.Value);
 
-                        await command.ExecuteNonQueryAsync();                  
+                        await command.ExecuteNonQueryAsync();
                     }
                 }
             }
@@ -551,21 +518,69 @@ namespace Spectr.ViewModel
             }
         }
 
-       
-       
+
+
         #endregion
 
-        /// <summary>
-        /// ToDO:
-        /// </summary>
+        #region Удаление заказа
+        public ICommand DeleteOrderCommand { get; }
+        private bool CanDeleteOrderCommandExecute(object parameter)
+        {
+            return true;
+        }
+
+        private async void OnDeleteOrderCommandExecuted(object parameter)
+        {
+            if (parameter is DataRowView rowView && rowView["ID"] != null)
+            {
+                int orderId = Convert.ToInt32(rowView["ID"]);
+                try
+                {
+                    await DeleteOrderAsync(orderId);
+                    await LoadDataRepairOrder();
+                }              
+            }
+            else
+            {
+                MessageBox.Show("Неверно выбрано", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async Task DeleteOrderAsync(int orderId)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection(Properties.Settings.Default.con))
+                {
+                    await con.OpenAsync();
+                    using (SqlCommand command = new SqlCommand("DELETE FROM Repair WHERE OrderID=@ID", con))
+                    {
+                        command.Parameters.AddWithValue("@ID", orderId);
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+
+                //Orders.Remove(orderId);
+        
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка удаления: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
 
 
+        #region Изменение заказа
+        //TODO:
+
+        #endregion
 
 
         public OrderViewModel()
         {
-            Orders = new ObservableCollection<RepairOrder>();            
-
+           
             _ = LoadDataRepairOrder();
 
             OpenAddOrderViewCommand = new LambdaCommand(OnOpenAddOrderViewCommandExecuted, CanOpenAddOrderViewCommandExecute);
@@ -575,8 +590,8 @@ namespace Spectr.ViewModel
             AddOrderCommand = new LambdaCommand(OnAddOrderCommandExecuted, CanAddOrderCommandExecute);
 
             CloseAddOrderViewCommand = new LambdaCommand(OnCloseAddOrderViewCommandExecuted, CanCloseAddOrderViewCommandExecute);
-            
 
+            DeleteOrderCommand = new LambdaCommand(OnDeleteOrderCommandExecuted, CanDeleteOrderCommandExecute);
 
         }
 
